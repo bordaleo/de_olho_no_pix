@@ -325,47 +325,60 @@
               </label>
             </div>
             <div class="row">
-              <label>
-                <span>Meio do CPF/CNPJ <span class="badge badge-opt">Opcional</span></span>
-                <input id="docparcial" type="text" inputmode="numeric" placeholder="***.123.***-** / **.***.***/0001-**" />
-              </label>
-              <label>
-                <span>Agência <span class="badge badge-req">Obrigatório</span></span>
-                <input id="ag" type="text" required inputmode="numeric" placeholder="0001" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe a agência.</small>
-              </label>
-            </div>
-            <div class="row">
-              <label>
-                <span>Conta <span class="badge badge-req">Obrigatório</span></span>
-                <input id="cc" type="text" required inputmode="numeric" placeholder="123456-7" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe a conta.</small>
-              </label>
-              <label>
-                <span>Banco <span class="badge badge-req">Obrigatório</span></span>
-                <input id="banco" type="text" required placeholder="Ex.: Banco X" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe o banco.</small>
-              </label>
-            </div>
-            <div class="row">
-              <label>
-                <span>Número do BO <span class="badge badge-opt">Opcional</span></span>
-                <input id="bo" type="text" placeholder="2025-000000" />
-              </label>
-              <label>
-                <span>Anexar B.O <span class="badge badge-opt">Opcional</span></span>
-                <input type="file" accept=".pdf,.jpg,.jpeg,.png" />
-              </label>
-            </div>
             <label>
-              <span>Confirmação <span class="badge badge-opt">Opcional</span></span>
-              <textarea id="desc" rows="3" placeholder="Conte, com serenidade, o que aconteceu"></textarea>
+              <span>Chave Pix <span class="badge badge-req">Obrigatório</span></span>
+              <input id="chave_pix" type="text" required placeholder="Digite a chave pix (email, tel, cpf, etc)" aria-invalid="false" />
+              <small class="error" aria-live="polite">Informe a chave pix denunciada.</small>
             </label>
-            <div class="actions" style="justify-content:center">
-              <a class="btn ghost" data-route href="#/hub">← Voltar</a>
-              <button class="btn primary" type="submit">Confirmar denúncia</button>
-            </div>
-            <p id="flash" class="sr-only" aria-live="polite"></p>
+            <label>
+              <span>CPF/CNPJ <span class="badge badge-req">Obrigatório</span></span>
+              <input id="docparcial" type="text" required inputmode="numeric" placeholder="***.123.***-** / **.***.***/0001-**" aria-invalid="false" />
+              <small class="error" aria-live="polite">Informe o CPF/CNPJ (mesmo que parcial).</small>
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              <span>Agência <span class="badge badge-opt">Opcional</span></span>
+              <input id="ag" type="text" inputmode="numeric" placeholder="0001" aria-invalid="false" />
+              <small class="error" aria-live="polite">Informe a agência.</small>
+            </label>
+            <label>
+              <span>Conta <span class="badge badge-opt">Opcional</span></span>
+              <input id="cc" type="text" inputmode="numeric" placeholder="123456-7" aria-invalid="false" />
+              <small class="error" aria-live="polite">Informe a conta.</small>
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              <span>Banco <span class="badge badge-req">Obrigatório</span></span>
+              <input id="banco" type="text" required placeholder="Ex.: Banco X" aria-invalid="false" />
+              <small class="error" aria-live="polite">Informe o banco.</small>
+            </label>
+            <label>
+              <span>Número do BO <span class="badge badge-req">Obrigatório</span></span>
+              <input id="bo" type="text" required placeholder="2025-000000" />
+              <small class="error" aria-live="polite">Informe o número do B.O.</small>
+            </label>
+          </div>
+          
+          <label>
+            <span>Anexar B.O <span class="badge badge-req">Obrigatório</span></span>
+            <input type="file" id="anexo" required accept=".pdf,.jpg,.jpeg,.png" />
+            <small class="error" aria-live="polite">O anexo do B.O. é obrigatório.</small>
+          </label>
+
+          <label>
+            <span>Confirmação <span class="badge badge-opt">Opcional</span></span>
+            <textarea id="desc" rows="3" placeholder="Conte, com serenidade, o que aconteceu"></textarea>
+          </label>
+          
+          <div class="actions" style="justify-content:center">
+            <a class="btn ghost" data-route href="#/hub">← Voltar</a>
+            <button class="btn primary" type="submit">Confirmar denúncia</button>
+          </div>
+          <p id="flash" class="sr-only" aria-live="polite"></p>
           </form>
         </section>
 
@@ -394,14 +407,11 @@
             <table aria-label="Resultados de pesquisa" id="resultados">
               <thead>
                 <tr>
-                  <th>Tipo de chave Pix</th>
-                  <th>Nome da conta</th>
-                  <th>Meio do CPF/CNPJ</th>
-                  <th>Agência</th>
-                  <th>Conta</th>
+                  <th>Nome da Conta</th>
+                  <th>CPF/CNPJ</th>
                   <th>Banco</th>
-                  <th>Nº do BO</th>
-                  <th>Denúncias</th>
+                  <th>Chave Pix (Exemplo)</th>
+                  <th>Total de Denúncias</th>
                 </tr>
               </thead>
               <tbody id="tbody"></tbody>
@@ -473,18 +483,14 @@
     // Atualiza o ano
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Preferências de tema
+    // Preferências de tema (Original)
     const body = document.body;
     const btnDark = document.getElementById('btn-dark');
     const btnContrast = document.getElementById('btn-contrast');
-
-    // Restaurar preferências
     const savedDark = localStorage.getItem('mode-dark') === 'true';
     const savedDal  = localStorage.getItem('mode-daltonico') === 'true';
     if(savedDark) body.classList.add('dark');
     if(savedDal)  body.classList.add('daltonico');
-
-    // Garantir que não somem temas: ativar um desativa o outro
     function setDark(on){
       body.classList.toggle('dark', !!on);
       if(on){ body.classList.remove('daltonico'); localStorage.setItem('mode-daltonico','false'); }
@@ -495,14 +501,13 @@
       if(on){ body.classList.remove('dark'); localStorage.setItem('mode-dark','false'); }
       localStorage.setItem('mode-daltonico', on ? 'true' : 'false');
     }
-
     btnDark?.addEventListener('click', ()=> setDark(!body.classList.contains('dark')));
     btnContrast?.addEventListener('click', ()=> setDal(!body.classList.contains('daltonico')));
 
-    // Utilitário
+    // Utilitário (Original)
     function onlyDigits(v){return (v||'').replace(/\D+/g,'');}
 
-    // Máscaras
+    // Máscaras (Original)
     function maskCPF(el){
       let v = onlyDigits(el.value).slice(0,11);
       let out = '';
@@ -533,7 +538,7 @@
       el.setAttribute('aria-invalid', v.length>0 ? 'false' : 'true');
     }
 
-    // Liga máscaras
+    // Liga máscaras (Original)
     const cpf = document.getElementById('cpf');
     const tel = document.getElementById('tel');
     const ag  = document.getElementById('ag');
@@ -543,7 +548,7 @@
     if(ag){  ag.addEventListener('input', ()=>maskAG(ag)); }
     if(cc){  cc.addEventListener('input', ()=>maskCC(cc)); }
 
-    // Roteador simples + topnav dinâmica
+    // Roteador simples (Original - ESSA ERA A PARTE FALTANTE)
     const routes = ["inicio","cadastro","hub","denunciar","pesquisar","faq","recuperar"];
     function setActive(slug){
       routes.forEach(id=>{
@@ -551,12 +556,10 @@
         if(!el) return;
         el.classList.toggle('active', id===slug);
       });
-      // Atualiza aria-current nos links
       document.querySelectorAll('[data-route]').forEach(a=>{
         const dest = (a.getAttribute('href')||'').replace(/^#\//,'');
         a.setAttribute('aria-current', dest===slug ? 'page' : 'false');
       });
-      // Topnav: mostrar somente FAQ nas telas de login/cadastro/recuperar
       const nav = document.querySelector('.topnav');
       if(nav){
         if(['inicio','cadastro','recuperar'].includes(slug)){
@@ -576,116 +579,235 @@
     }
     function onRoute(){ setActive(currentSlug()); }
     window.addEventListener('hashchange', onRoute);
-    window.addEventListener('DOMContentLoaded', onRoute);
 
-    // Seed & storage (protótipo)
-    const seed = [
-      {tipo:'CPF', nome:'Maria S.', doc:'***.123.***-**', ag:'0001', cc:'123456-7', banco:'Banco A', bo:'2025-000001', denuncias:6, risco:5},
-      {tipo:'E-mail', nome:'Comércio XYZ', doc:'—', ag:'0456', cc:'98765-4', banco:'Banco B', bo:'—', denuncias:11, risco:10},
-      {tipo:'Chave aleatória', nome:'João P.', doc:'—', ag:'1234', cc:'000222-1', banco:'Banco C', bo:'2025-000777', denuncias:18, risco:15}
-    ];
-
-    const storeKey = 'deolhonopix-denuncias';
-    function getData(){
-      try{ return JSON.parse(localStorage.getItem(storeKey)) || seed.slice(); }
-      catch{ return seed.slice(); }
-    }
-    function setData(rows){ localStorage.setItem(storeKey, JSON.stringify(rows)); }
-
-    // Render tabela de pesquisa
-    function renderTable(rows){
+    // Render tabela de pesquisa (ATUALIZADO para API AGRUPADA)
+    function renderTable(rows) {
       const tbody = document.getElementById('tbody');
-      if(!tbody) return;
+      if (!tbody) return;
       tbody.innerHTML = '';
+    
+      if (!rows || rows.length === 0) {
+        // Atualiza o colspan para 5 colunas
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma denúncia encontrada.</td></tr>';
+        return;
+      }
+    
       rows.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = r.risco===15?'risk-15': r.risco===10?'risk-10':'risk-5';
+      
+        // Adiciona classes de risco baseadas na contagem
+        if (r.total_denuncias >= 10) {
+            tr.className = 'risk-15'; // Vermelho
+        } else if (r.total_denuncias >= 5) {
+            tr.className = 'risk-10'; // Âmbar
+        } else if (r.total_denuncias >= 2) {
+            tr.className = 'risk-5'; // Laranja claro
+        }
+      
+        // Monta as colunas com os dados da DenunciaAgrupada
         tr.innerHTML = `
-          <td>${r.tipo}</td>
-          <td>${r.nome}</td>
-          <td>${r.doc}</td>
-          <td>${r.ag}</td>
-          <td>${r.cc}</td>
+          <td>${r.nome_conta}</td>
+          <td>${r.cpf_cnpj}</td>
           <td>${r.banco}</td>
-          <td>${r.bo}</td>
-          <td><span class="badge">${r.denuncias}</span></td>`;
+          <td>${r.chave_pix_exemplo}</td>
+          <td><span class="badge" style="font-size: 14px;">${r.total_denuncias}</span></td>`;
         tbody.appendChild(tr);
       });
     }
 
-    // Busca simples
+    // Busca simples (ATUALIZADO para API)
     const q = document.getElementById('q');
     const btnBuscar = document.getElementById('btn-buscar');
     const btnLimpar = document.getElementById('btn-limpar');
-    btnBuscar?.addEventListener('click', ()=>{
-      const term = (q?.value||'').toLowerCase();
-      const out = getData().filter(r=>{
-        return [r.tipo, r.nome, r.doc, r.ag, r.cc, r.banco, r.bo].some(v=> String(v).toLowerCase().includes(term));
-      });
-      renderTable(out);
+    
+    btnBuscar?.addEventListener('click', async () => {
+      const term = (q?.value || '').toLowerCase();
+      const url = new URL('http://localhost:8000/api/denuncias');
+      if (term) {
+        url.searchParams.append('q', term);
+      }
+      
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Falha ao buscar denúncias');
+        
+        const data = await response.json();
+        renderTable(data);
+        
+      } catch (error) {
+        console.error('Erro na busca:', error);
+        showToast('Erro ao conectar ao servidor.');
+      }
     });
-    btnLimpar?.addEventListener('click', ()=>{ if(q){ q.value=''; } renderTable(getData()); });
 
-    // Submissão de denúncia (armazena localmente)
+    btnLimpar?.addEventListener('click', () => { 
+      if (q) { q.value = ''; }
+      btnBuscar?.click(); 
+    });
+
+    // Submissão de denúncia (ATUALIZADO para API)
     const formDen = document.getElementById('form-denuncia');
-    formDen?.addEventListener('submit', (e)=>{
+    
+    formDen?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const tipo = document.getElementById('tipo');
-      const nome = document.getElementById('nome');
-      const agi  = document.getElementById('ag');
-      const cci  = document.getElementById('cc');
-      const banco= document.getElementById('banco');
-      const bo   = document.getElementById('bo');
 
-      const required = [tipo, nome, agi, cci, banco];
-      let ok = true;
-      required.forEach(el=>{
-        if(!el.value){ el.setAttribute('aria-invalid','true'); ok=false; }
-        else el.setAttribute('aria-invalid','false');
-      });
-      if(!ok){
+      if (!formDen.checkValidity()) {
+        formDen.querySelector(':invalid')?.focus();
         showToast('Preencha todos os campos obrigatórios.');
         return;
       }
 
-      const novo = {
-        tipo: tipo.value,
-        nome: nome.value,
-        doc: (document.getElementById('docparcial')?.value)||'—',
-        ag: agi.value,
-        cc: cci.value,
-        banco: banco.value,
-        bo: bo.value||'—',
-        denuncias: 1,
-        risco: 5
-      };
-      const data = getData();
-      data.unshift(novo);
-      setData(data);
-      renderTable(data);
-      showToast('Denúncia registrada localmente (protótipo).');
-      window.location.hash = '#/pesquisar';
+      const formData = new FormData();
+      
+      // Obrigatórios
+      formData.append('anexo', document.getElementById('anexo').files[0]);
+      formData.append('tipo_chave_pix', document.getElementById('tipo').value);
+      formData.append('nome_conta', document.getElementById('nome').value);
+      formData.append('chave_pix', document.getElementById('chave_pix').value);
+      formData.append('numero_bo', document.getElementById('bo').value);
+      
+      // Opcionais
+      const doc = document.getElementById('docparcial')?.value;
+      const ag = document.getElementById('ag')?.value;
+      const cc = document.getElementById('cc')?.value;
+      const banco = document.getElementById('banco')?.value;
+      const desc = document.getElementById('desc')?.value;
+
+      if(doc) formData.append('cpf_cnpj', doc);
+      if(ag) formData.append('agencia', ag);
+      if(cc) formData.append('conta', cc);
+      if(banco) formData.append('banco', banco);
+      if(desc) formData.append('descricao', desc);
+
+      try {
+        showToast('Enviando denúncia...');
+        
+        const response = await fetch('http://localhost:8000/api/denuncias', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.detail || 'Erro desconhecido no servidor');
+        }
+
+        showToast('Denúncia registrada com sucesso!');
+        formDen.reset();
+        window.location.hash = '#/pesquisar';
+        btnLimpar?.click(); 
+
+      } catch (error) {
+        console.error('Falha ao enviar denúncia:', error);
+        showToast(`Erro: ${error.message}`);
+      }
     });
 
-    // Cadastro: mostra toast e volta pra Entrar
-    const formCad = document.getElementById('form-cadastro');
+    // Toast (Original)
     function showToast(msg){
       const t = document.getElementById('toast');
       if(!t) return; t.textContent = msg; t.classList.add('show');
       setTimeout(()=> t.classList.remove('show'), 3000);
     }
-    formCad?.addEventListener('submit', (e)=>{
+    
+    // Cadastro (ATUALIZADO para API)
+    const formCad = document.getElementById('form-cadastro');
+    
+    formCad?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if(!formCad.checkValidity()){
+      if (!formCad.checkValidity()) {
         showToast('Preencha os campos obrigatórios.');
         return;
       }
-      window.location.hash = '#/inicio';
-      showToast('Cadastro realizado com sucesso! Agora é só entrar.');
+
+      // Get form data
+      const nome = formCad.querySelector('input[type="text"]').value;
+      const cpf = document.getElementById('cpf').value;
+      const telefone = document.getElementById('tel').value;
+      const email = formCad.querySelector('input[type="email"]').value;
+      const senha = formCad.querySelector('input[type="password"]').value;
+
+      try {
+        const response = await fetch('http://localhost:8000/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            nome: nome,
+            cpf: onlyDigits(cpf), // Envia só os dígitos
+            telefone: onlyDigits(telefone), // Envia só os dígitos
+            senha: senha
+          }),
+        });
+        
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || 'Erro ao cadastrar');
+        }
+
+        // Sucesso!
+        window.location.hash = '#/inicio';
+        showToast('Cadastro realizado com sucesso! Agora é só entrar.');
+
+      } catch (error) {
+        console.error('Erro no cadastro:', error);
+        showToast(`Erro: ${error.message}`);
+      }
+    });
+    
+    // NOVO: Listener para o formulário de LOGIN
+    const formLogin = document.querySelector('#inicio form');
+    formLogin?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!formLogin.checkValidity()) {
+        showToast('Preencha e-mail e senha.');
+        return;
+      }
+      
+      const email = document.getElementById('login-email').value;
+      const senha = document.getElementById('login-pass').value;
+      
+      try {
+        const response = await fetch('http://localhost:8000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            senha: senha
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.detail || 'E-mail ou senha incorretos');
+        }
+        
+        // SUCESSO NO LOGIN
+        // 1. Salva o token no localStorage
+        localStorage.setItem('pix-token', data.access_token);
+        
+        // 2. Redireciona para o Hub
+        window.location.hash = '#/hub';
+        showToast('Login efetuado com sucesso!');
+        
+      } catch (error) {
+        console.error('Erro no login:', error);
+        showToast(`Erro: ${error.message}`);
+      }
     });
 
-    // Primeira renderização da tabela
-    window.addEventListener('DOMContentLoaded', ()=>{ renderTable(getData()); });
+    // Renderização final (ATUALIZADO)
+    // Combina o roteador e o carregamento da tabela
+    window.addEventListener('DOMContentLoaded', () => {
+      onRoute(); // Roda o roteador primeiro
+      btnLimpar?.click(); // Carrega a tabela da API
+    });
   </script>
 </body>
 </html>

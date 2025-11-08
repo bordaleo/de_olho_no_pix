@@ -1,0 +1,15 @@
+# .gitignore
+# Arquivos e pastas a serem ignorados pelo Git
+
+# 1. O arquivo de segredos
+.env
+
+# 2. O ambiente virtual (que contém as bibliotecas)
+venv/
+/venv
+
+# 3. Arquivos de cache do Python
+__pycache__/
+*.pyc
+
+anotações.txt
