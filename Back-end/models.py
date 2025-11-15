@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, func, LargeBinary
 from database import Base
+import datetime
 # Este 'Base' é o que estava com a linha amarela. 
 # Agora que o estamos usando aqui, o aviso sumirá de lá.
 
@@ -14,8 +15,9 @@ class Usuario(Base):
     nome = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, nullable=False, index=True)
     senha_hash = Column(String(255), nullable=False)
-    data_criacao = Column(DateTime, server_default=func.now())
+    data_criacao = Column(DateTime, default=datetime.datetime.utcnow)
     telefone = Column(String(11), nullable=True)
+    
 
 
 class Denuncia(Base):
@@ -44,4 +46,4 @@ class Denuncia(Base):
     descricao = Column(String(255), nullable=True)
 
     # --- Campo Automático ---
-    data_denuncia = Column(DateTime, server_default=func.now())
+    data_denuncia = Column(DateTime, default=datetime.datetime.utcnow)

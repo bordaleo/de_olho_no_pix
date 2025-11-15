@@ -86,25 +86,3 @@ class Denuncia(BaseModel):
 
     class Config:
         from_attributes = True
-        
-class DenunciaAgrupada(BaseModel):
-    """
-    Schema para SAÍDA (Pesquisa).
-    Mostra os dados agrupados por fraude.
-    """
-    # Campos do grupo
-    nome_conta: str
-    cpf_cnpj: str
-    banco: str
-
-    # Um exemplo de chave pix usada nesse grupo
-    chave_pix_exemplo: str 
-
-    # A contagem total
-    total_denuncias: int
-
-    class Config:
-        from_attributes = True
-
-    class Config:
-        from_attributes = True

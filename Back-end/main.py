@@ -1,5 +1,6 @@
 import os
 import bcrypt
+import auth
 from datetime import datetime, timedelta
 from typing import List, Annotated
 
@@ -116,35 +117,31 @@ async def login_for_access_token(
 
 @app.post("/api/denuncias", response_model=schemas.Denuncia, status_code=status.HTTP_201_CREATED)
 async def criar_denuncia(
-    # --- CAMPOS OBRIGATÓRIOS (SEM PADRÃO) VÊM PRIMEIRO ---
+    # --- CAMPOS OBRIGATÓRIOS VÊM PRIMEIRO ---
     anexo: Annotated[UploadFile, File()],
     tipo_chave_pix: Annotated[str, Form()],
     nome_conta: Annotated[str, Form()],
     chave_pix: Annotated[str, Form()],
     numero_bo: Annotated[str, Form()],
-    cpf_cnpj: Annotated[str, Form()], # MUDOU
-    banco: Annotated[str, Form()],   # MUDOU
-    
-    # --- CAMPOS COM PADRÃO (DEPENDÊNCIAS E OPCIONAIS) VÊM DEPOIS ---
-    db: AsyncSession = Depends(get_db), # <-- MOVIDO PARA CÁ
+    cpf_cnpj: Annotated[str, Form()],
+    banco: Annotated[str, Form()],
 
-    # --- Campos Opcionais (do HTML) ---
+    # --- DEPENDÊNCIAS E OPCIONAIS ---
+    db: AsyncSession = Depends(get_db),
+    current_user: models.Usuario = Depends(auth.get_current_user), # <-- SEGURANÇA ADICIONADA
+
+    # Opcionais
     agencia: Annotated[str | None, Form()] = None,
     conta: Annotated[str | None, Form()] = None,
-    descricao: Annotated[str | None, Form()] = None
+    descricao: Annotated[str | None, Form()] = None,
+    valor: Annotated[str | None, Form()] = None # <-- CAMPO DO AMIGO
 ):
     """
     Rota para o formulário de '#denunciar'.
-    Recebe dados de formulário (multipart) e salva no banco.
+    AGORA PROTEGIDA POR LOGIN.
     """
-    
-    # Lê o arquivo B.O. (o anexo) em bytes
-    try:
-        anexo_bytes = await anexo.read()
-    except Exception:
-        raise HTTPException(status_code=400, detail="Erro ao ler o arquivo anexo.")
-    
-    # Chama a função do crud.py para salvar tudo
+    anexo_bytes = await anexo.read()
+
     db_denuncia = await crud.create_denuncia(
         db=db,
         anexo_bytes=anexo_bytes,
@@ -153,37 +150,29 @@ async def criar_denuncia(
         nome_conta=nome_conta,
         numero_bo=numero_bo,
         cpf_cnpj=cpf_cnpj,
+        banco=banco,
         agencia=agencia,
         conta=conta,
-        banco=banco,
         descricao=descricao
+        # Nota: 'valor' não está no nosso model/crud, então é ignorado.
     )
-    
     return db_denuncia
 
 
-@app.get("/api/denuncias", response_model=List[schemas.DenunciaAgrupada])
+# Esta é a rota de BUSCA (GET)
+@app.get("/api/denuncias", response_model=List[schemas.Denuncia])
 async def pesquisar_denuncias(
-    q: str | None = None, db: AsyncSession = Depends(get_db)
+    q: str | None = None,
+    tipo: str | None = None, 
+    db: AsyncSession = Depends(get_db),
+    current_user: models.Usuario = Depends(auth.get_current_user)
 ):
     """
-    Rota para a tela '#pesquisar'.
-    Retorna denúncias AGRUPADAS.
+    Rota para a tela '#pesquisar' (MODO DETALHADO).
+    AGORA PROTEGIDA POR LOGIN.
     """
-    resultados_tuplas = await crud.get_denuncias_by_query(db, query=q)
-
-    # Converte a lista de Tuplas em uma lista de objetos Pydantic (Dicionários)
-    denuncias_agrupadas = [
-        schemas.DenunciaAgrupada(
-            nome_conta=r.nome_conta,
-            cpf_cnpj=r.cpf_cnpj,
-            banco=r.banco,
-            chave_pix_exemplo=r.chave_pix_exemplo,
-            total_denuncias=r.total_denuncias
-        ) for r in resultados_tuplas
-    ]
-
-    return denuncias_agrupadas
+    denuncias = await crud.get_denuncias_by_query(db, query=q, tipo=tipo)
+    return denuncias
 
 
 @app.get("/api/denuncias/{denuncia_id}/anexo")

@@ -1,6 +1,6 @@
 import bcrypt
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select, or_, func, tuple_
+from sqlalchemy.sql import select, or_, func
 # Importamos os arquivos que já criamos
 import models, schemas
 # ==================================
@@ -57,43 +57,36 @@ async def create_user(db: AsyncSession, user: schemas.UsuarioCreate) -> models.U
 #        CRUD DE DENÚNCIA
 # ==================================
 
-async def get_denuncias_by_query(db: AsyncSession, query: str | None) -> list[tuple]:
+async def get_denuncias_by_query(
+    db: AsyncSession, 
+    query: str | None, 
+    tipo: str | None  # <-- Novo parâmetro do amigo
+) -> list[models.Denuncia]:
     """
-    Busca denúncias AGRUPADAS por grupo_fraude_id.
-    Retorna uma lista de tuplas com os dados do grupo e a contagem.
+    Busca denúncias na tela "Pesquisar" (MODO DETALHADO).
     """
+    
+    statement = select(models.Denuncia).order_by(models.Denuncia.data_denuncia.desc())
 
-    # Seleciona os campos que queremos agrupar e contar
-    statement = select(
-        models.Denuncia.nome_conta,
-        models.Denuncia.cpf_cnpj,
-        models.Denuncia.banco,
-        func.max(models.Denuncia.chave_pix).label("chave_pix_exemplo"), # Pega uma chave de exemplo
-        func.count(models.Denuncia.id_denuncia).label("total_denuncias") # Conta as denúncias
-    ).group_by(
-        models.Denuncia.grupo_fraude_id,
-        models.Denuncia.nome_conta,
-        models.Denuncia.cpf_cnpj,
-        models.Denuncia.banco
-    ).order_by(
-        func.count(models.Denuncia.id_denuncia).desc() # Ordena pelos mais denunciados
-    )
-
-    # Se o usuário digitou algo na busca...
+    # Filtro 1: Pelo termo de busca (query)
     if query:
         like_query = f"%{query}%"
-        # Adiciona o filtro (WHERE)
         statement = statement.filter(
             or_(
                 models.Denuncia.chave_pix.like(like_query),
                 models.Denuncia.nome_conta.like(like_query),
                 models.Denuncia.banco.like(like_query),
+                models.Denuncia.numero_bo.like(like_query),
                 models.Denuncia.cpf_cnpj.like(like_query)
             )
         )
-
+    
+    # Filtro 2: Pelo tipo de chave (do amigo)
+    if tipo:
+        statement = statement.filter(models.Denuncia.tipo_chave_pix == tipo)
+    
     result = await db.execute(statement)
-    return result.all()  # Retorna uma lista de resultados (tuplas)
+    return result.scalars().all()  # Retorna a lista detalhada
 
 async def create_denuncia(
     db: AsyncSession, 

@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS denuncias (
     numero_bo VARCHAR(50),
     anexo LONGBLOB,
     descricao VARCHAR(255),
-    data_denuncia VARCHAR(10)
+    data_denuncia VARCHAR(10),
+    grupo_fraude_id VARCHAR(255) NULL
 );
 
 SET FOREIGN_KEY_CHECKS=1;

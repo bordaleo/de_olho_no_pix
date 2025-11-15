@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>De Olho no Pix — Front-end</title>
+  <title>De Olho no Pix — Início (Híbrido)</title>
   <meta name="description" content="Protótipo educativo para prevenir golpes no Pix: denúncia, pesquisa e orientações." />
   <meta name="theme-color" content="#0f172a" />
-  <link rel="icon" href="DeOlhoNoPix%20imagem%201.png"> 
+  <link rel="icon" href="DeOlhoNoPix%20imagem%201.png">
   <style>
     :root{
       --brand-primary:#dff4ff;
       --brand-secondary:#2f7a25;
       --brand-secondary-grad:#6eaa5e;
       --brand-accent:#007bff;
-      --bg:#ffffff; /* Fundo claro padrão */
+      --bg:#ffffff;
       --text:#0f172a;
       --muted:#475569;
       --card:#ffffff;
@@ -39,51 +39,56 @@
       --brand-accent:#60a5fa;
       --muted:#94a3b8;
       --focus:#3b82f6;
-      --warn:#f59e0b;  /* mantém semáforo */
+      --warn:#f59e0b;
       --amber:#fbbf24;
       --danger:#ef4444;
     }
-    body.dark header{
-      background:linear-gradient(90deg,#1e293b,#0f172a);
-      border-bottom-color:#334155;
-    }
+    body.dark header{ background:linear-gradient(90deg,#1e293b,#0f172a); border-bottom-color:#334155; }
     body.dark nav.topnav a:hover,
-    body.dark nav.topnav a[aria-current="page"]{
-      background:#1e293b;
-      border-color:#475569;
-    }
+    body.dark nav.topnav a[aria-current="page"]{ background:#1e293b; border-color:#475569; }
     body.dark .btn-tool:hover{ background:#334155; }
     body.dark thead th{ background:#0f172a; color:#c7d2fe; }
 
-    /* ♿ Modo daltônico escuro (forte) */
+    /* ♿ Modo daltônico escuro (acessível) */
     body.daltonico{
-      --bg:#0a0a0a;           /* fundo escuro mais neutro */
-      --text:#f5f7fb;         /* texto claro */
-      --card:#141414;         /* superfícies */
-      --border:#2a2a2a;       /* bordas */
-      /* Paleta segura (evita confusão R/G) */
+      --bg:#0a0a0a;
+      --text:#f5f7fb;
+      --card:#141414;
+      --border:#2a2a2a;
+      /* Paleta segura */
       --brand-primary:#0ea5e9;       /* ciano vivo */
       --brand-secondary:#f59e0b;     /* âmbar forte */
       --brand-secondary-grad:#fbbf24;/* âmbar claro */
       --brand-accent:#a78bfa;        /* roxo médio */
-      --muted:#cbd5e1;               /* texto secundário */
-      --focus:#22d3ee;               /* ciano claro para foco */
-      --ok:#22d3ee;                  /* ciano = ok */
-      --warn:#f59e0b;                /* âmbar = atenção */
+      --muted:#cbd5e1;
+      --focus:#22d3ee;
+      --ok:#22d3ee;                  /* ciano */
+      --warn:#f59e0b;                /* âmbar */
       --amber:#fde047;               /* amarelo claro */
-      --danger:#e11d48;              /* magenta/rose = perigo */
+      --danger:#e11d48;              /* magenta/rose */
     }
-    body.daltonico header{
-      background:linear-gradient(90deg,#111827,#0a0a0a);
-      border-bottom-color:#2a2a2a;
-    }
+    body.daltonico header{ background:linear-gradient(90deg,#111827,#0a0a0a); border-bottom-color:#2a2a2a; }
     body.daltonico nav.topnav a:hover,
-    body.daltonico nav.topnav a[aria-current="page"]{
-      background:#111827;
-      border-color:#374151;
+    body.daltonico nav.topnav a[aria-current="page"]{ background:#111827; border-color:#374151; }
+    body.daltonico .btn-tool,
+    body.daltonico #btn-dark,
+    body.daltonico #btn-contrast{
+      background:#141414;
+      color:#f5f7fb;
+      border:1px solid #374151;
     }
-    body.daltonico .btn-tool:hover{ background:#1f2937; }
+    body.daltonico .btn-tool:hover,
+    body.daltonico #btn-dark:hover,
+    body.daltonico #btn-contrast:hover{
+      filter:brightness(1.05);
+    }
     body.daltonico thead th{ background:#111827; color:#93c5fd; }
+    /* Correções de contraste dos botões no modo daltônico */
+    body.daltonico .btn{ border-color:#374151; background:#141414; color:#f5f7fb; }
+    body.daltonico .btn:hover{ filter:brightness(1.05); }
+    body.daltonico .btn.ghost{ background:#141414; color:#f5f7fb; }
+    body.daltonico .btn.primary{ background:linear-gradient(135deg, var(--brand-accent), #7c93ff); color:#0b0b0b; }
+    body.daltonico #btn-voltar-global{ background:#141414; color:#f5f7fb; border-color:#374151; }
 
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -97,6 +102,7 @@
     a{color:inherit;text-decoration:none}
     .app{min-height:100%;display:grid;grid-template-rows:auto 1fr auto}
 
+    .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .skip:focus{left:12px;top:12px;width:auto;height:auto;background:#fff;color:#000;padding:.5rem .75rem;border-radius:.5rem;z-index:1000}
 
@@ -124,6 +130,16 @@
     }
     .btn-tool:hover{background:#f1f5f9}
 
+    /* Botão Voltar global (fixo) */
+    #btn-voltar-global{
+      position:fixed; top:86px; left:16px; z-index:999;
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:12px; padding:8px 12px; cursor:pointer;
+      display:inline-flex; align-items:center; gap:6px; font-weight:700
+    }
+    #btn-voltar-global:hover{ filter:brightness(.97) }
+
     .container{max-width:var(--max); margin:0 auto; padding:36px 24px}
     main{min-height:60vh}
 
@@ -132,8 +148,9 @@
     .muted{color:var(--muted)}
 
     .badge{display:inline-block; padding:.25rem .5rem; border-radius:999px; font-size:12px; border:1px solid var(--border)}
-    .badge-req{background:#dcfce7; color:#166534}
-    .badge-opt{background:#fef9c3; color:#854d0e}
+
+    /* asterisco obrigatório — sem espaço antes do * */
+    .req{ color:#dc2626; font-weight:700; margin-left:0 }
 
     .grid{display:grid; gap:20px}
     .grid.two{grid-template-columns:repeat(2,1fr)}
@@ -144,7 +161,12 @@
     .hint{font-size:12px; color:var(--muted)}
     input,select,textarea{padding:12px 14px; border:1px solid var(--border); border-radius:14px; background:var(--card); font:inherit; color:inherit}
     input:focus,select:focus,textarea:focus{outline:3px solid var(--focus); outline-offset:2px}
-    input:required:invalid{border-color:#f59e0b}
+
+    /* estados de erro */
+    .field-error{ border-color:#dc2626 !important }
+    .error{display:none; color:#b91c1c; font-size:12px}
+    .error.show{ display:block }
+
     .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
 
     .actions{display:flex; gap:10px; flex-wrap:wrap}
@@ -154,17 +176,24 @@
     .btn.success{background:linear-gradient(135deg, var(--brand-secondary-grad), #a7f3d0); color:#064e3b; border-color:transparent}
     .btn.ghost{background:var(--card)}
 
-    .error{display:none; color:#b91c1c; font-size:12px}
-    input:invalid[aria-invalid="true"] + .error,
-    input:user-invalid + .error{display:block}
-
     section.page{display:none; padding:0}
     section.page.active{display:block}
 
-    /* CTA tiles (hub original) */
+    /* CTA tiles (hub) */
     .cta-tile{padding:28px; display:grid; gap:8px; place-content:center; text-align:center; border-radius:18px; background:linear-gradient(135deg,#fff,#f7fbff)}
     .cta-tile:hover{outline:3px solid var(--brand-accent); outline-offset:2px}
     .cta-title{font-size:22px; font-weight:800; color:#0b3b7a}
+
+    /* Pesquisar */
+    .search-wrap{max-width:1100px; margin:0 auto; display:grid; gap:16px}
+    .search-controls{ display:grid; gap:10px }
+    .search-input{ width:100%; }
+    .suggestions{ position:relative }
+    .suggestions-list{ position:absolute; top:100%; left:0; right:0; background:var(--card); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); z-index:20; display:none; max-height:220px; overflow:auto }
+    .suggestions-list.show{ display:block }
+    .suggestion-item{ padding:10px 12px; cursor:pointer; border-bottom:1px solid var(--border); font-size:14px }
+    .suggestion-item:last-child{ border-bottom:none }
+    .suggestion-item:hover{ background:#f1f5f9 }
 
     /* Tabela */
     table{width:100%; border-collapse:separate; border-spacing:0; background:var(--card); border-radius:16px; overflow:hidden}
@@ -179,13 +208,17 @@
     tr.risk-15{background:rgba(220,38,38,.08)}
 
     footer{border-top:1px solid var(--border); background:var(--card)}
-    .foot{max-width:var(--max); margin:0 auto; padding:16px 20px; color:var(--muted); font-size:14px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap}
+    .foot{max-width:var(--max); margin:0 auto; padding:16px 20px; color:#666; font-size:14px; display:flex; justify-content:center; align-items:center; gap:16px; text-align:center}
 
     .toast{position:fixed; left:50%; bottom:24px; transform:translate(-50%, 120%); background:#0ea5e9; color:#fff; padding:12px 16px; border-radius:12px; font-weight:700; transition:transform .35s ease, opacity .35s ease; opacity:0; z-index:9999}
     .toast.show{transform:translate(-50%, 0); opacity:1}
+    .toast.success{ background: #16a34a }
+    .toast.error{ background: #dc2626 }
+
+    .legend{ display:flex; gap:10px; flex-wrap:wrap; margin:16px 0 }
 
     @media (max-width: 1024px){ .grid.two{grid-template-columns:1fr} }
-    @media (max-width: 900px){ .row{grid-template-columns:1fr} }
+    @media (max-width: 900px){ .row{grid-template-columns:1fr} #btn-voltar-global{ top:72px; } }
     @media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto} }
   </style>
 </head>
@@ -202,10 +235,11 @@
           </div>
         </div>
         <nav class="topnav" aria-label="Navegação principal (topo)">
-          <a data-route href="#/hub">Ações</a>
+          <a data-route href="#/hub">Início</a>
           <a data-route href="#/denunciar">Denunciar</a>
           <a data-route href="#/pesquisar">Pesquisar</a>
           <a data-route href="#/faq">FAQ</a>
+          <a data-route href="#/perfil" style="display:none" id="nav-perfil">Perfil</a>
         </nav>
         <div class="tools" aria-label="Ferramentas de acessibilidade e tema">
           <button id="btn-contrast" class="btn-tool" title="Alternar modo daltônico">Acessibilidade</button>
@@ -214,28 +248,28 @@
       </div>
     </header>
 
+    <!-- Botão Voltar global -->
+    <button id="btn-voltar-global" type="button" aria-label="Voltar">← Voltar</button>
+
     <div class="container">
       <main id="main" role="main" class="grid" style="gap:24px">
-        <!-- INÍCIO / ENTRAR -->
+        <!-- ENTRAR -->
         <section id="inicio" class="page card active" aria-labelledby="h-inicio">
           <h1 id="h-inicio">Entrar</h1>
-          <p class="muted">Acesse com tranquilidade. Este é um protótipo visual (sem back-end).</p>
-          <form aria-describedby="d-inicio" style="max-width:800px; margin:0 auto" novalidate>
+          <form id="form-login" aria-describedby="d-inicio" style="max-width:800px; margin:0 auto" novalidate>
             <span id="d-inicio" class="sr-only">Campos de e-mail e senha. Links para recuperar senha e cadastrar-se.</span>
             <label>
-              <span>E-mail <span class="badge badge-req">Obrigatório</span></span>
+              <span>E-mail<span class="req">*</span></span>
               <input id="login-email" type="email" required placeholder="Digite seu e-mail" autocomplete="username" aria-invalid="false" />
-              <small class="hint">Usaremos seu e-mail para acesso.</small>
-              <small class="error" aria-live="polite">Informe um e-mail válido.</small>
+              <small class="error" id="err-login-email" aria-live="polite">Campo obrigatório. Informe um e-mail válido.</small>
             </label>
             <label>
-              <span>Senha <span class="badge badge-req">Obrigatório</span></span>
+              <span>Senha<span class="req">*</span></span>
               <input id="login-pass" type="password" required placeholder="Digite sua senha" autocomplete="current-password" minlength="6" aria-invalid="false" />
-              <small class="hint">Mínimo de 6 caracteres.</small>
-              <small class="error" aria-live="polite">Senha muito curta.</small>
+              <small class="error" id="err-login-pass" aria-live="polite">Campo obrigatório. Mínimo de 6 caracteres.</small>
             </label>
             <div class="actions" style="justify-content:center">
-              <a class="btn primary" data-route href="#/hub" aria-label="Entrar e ir para Ações">Entrar</a>
+              <button class="btn primary" type="submit" aria-label="Entrar e ir para Início">Entrar</button>
               <a class="btn ghost" data-route href="#/recuperar">Esqueci minha senha</a>
               <a class="btn success" data-route href="#/cadastro">Cadastrar-se</a>
             </div>
@@ -245,16 +279,16 @@
         <!-- CADASTRAR-SE -->
         <section id="cadastro" class="page card" aria-labelledby="h-cadastro">
           <h1 id="h-cadastro">Cadastrar-se</h1>
-          <p class="muted">Leva menos de dois minutos. Campos marcados como obrigatórios precisam ser preenchidos.</p>
+          <p class="muted">Leva menos de dois minutos. Campos com <span class="req">*</span> são obrigatórios.</p>
           <form id="form-cadastro" style="max-width:980px; margin:0 auto" novalidate>
             <div class="row">
               <label>
-                <span>Nome completo <span class="badge badge-req">Obrigatório</span></span>
-                <input type="text" required placeholder="Ex.: Maria de Souza" aria-invalid="false" />
+                <span>Nome completo<span class="req">*</span></span>
+                <input id="cad-nome" type="text" required placeholder="Ex.: Maria de Souza" aria-invalid="false" />
                 <small class="error" aria-live="polite">Informe seu nome completo.</small>
               </label>
               <label>
-                <span>CPF <span class="badge badge-req">Obrigatório</span></span>
+                <span>CPF<span class="req">*</span></span>
                 <input id="cpf" type="text" required inputmode="numeric" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="000.000.000-00" aria-invalid="false" />
                 <small class="hint">Apenas números — a formatação aparece sozinha.</small>
                 <small class="error" aria-live="polite">Digite no formato 000.000.000-00.</small>
@@ -262,52 +296,51 @@
             </div>
             <div class="row">
               <label>
-                <span>Número de telefone <span class="badge badge-req">Obrigatório</span></span>
+                <span>Número de telefone<span class="req">*</span></span>
                 <input id="tel" type="tel" required inputmode="tel" placeholder="(00) 00000-0000" aria-invalid="false" />
                 <small class="error" aria-live="polite">Informe um telefone válido.</small>
               </label>
               <label>
-                <span>E-mail <span class="badge badge-req">Obrigatório</span></span>
-                <input type="email" required placeholder="voce@exemplo.com" aria-invalid="false" />
+                <span>E-mail<span class="req">*</span></span>
+                <input id="cad-email" type="email" required placeholder="voce@exemplo.com" aria-invalid="false" />
                 <small class="error" aria-live="polite">E-mail inválido.</small>
               </label>
             </div>
             <label>
-              <span>Senha <span class="badge badge-req">Obrigatório</span></span>
-              <input type="password" required minlength="6" placeholder="Crie uma senha segura" aria-invalid="false" />
+              <span>Senha<span class="req">*</span></span>
+              <input id="cad-pass" type="password" required minlength="6" placeholder="Crie uma senha segura" aria-invalid="false" />
               <small class="error" aria-live="polite">Mínimo de 6 caracteres.</small>
             </label>
             <div class="actions" style="justify-content:center">
-              <a class="btn ghost" data-route href="#/inicio">← Voltar</a>
               <button class="btn primary" type="submit">Confirmar cadastro</button>
             </div>
           </form>
         </section>
 
-        <!-- HUB (AÇÕES) — restaurado igual ao original -->
+        <!-- HUB (INÍCIO) -->
         <section id="hub" class="page card" aria-labelledby="h-hub">
-          <h1 id="h-hub">O que você deseja fazer?</h1>
-          <p class="muted">Escolha uma ação. Você pode denunciar uma chave Pix suspeita ou pesquisar antes de enviar.</p>
+          <h1 id="h-hub">Selecione uma opção:</h1>
+          <p class="muted">Escolha a opção desejada abaixo.</p>
           <div class="grid two" style="max-width:1100px; margin:0 auto">
-            <a class="cta-tile" data-route href="#/denunciar" aria-label="Ir para Denunciar um golpe" style="background:linear-gradient(135deg,#fff,#e8fff0)">
-              <div class="cta-title">Denunciar um golpe</div>
-              <div class="muted">Relate a chave e, se possível, inclua o número do B.O.</div>
+            <a class="cta-tile" data-route href="#/denunciar" aria-label="Ir para Realizar uma denúncia" style="background:linear-gradient(135deg,#fff,#e8fff0)">
+              <div class="cta-title">Realizar uma denúncia</div>
+              <div class="muted">Denunciar chave Pix suspeita</div>
             </a>
             <a class="cta-tile" data-route href="#/pesquisar" aria-label="Ir para Pesquisar" style="background:linear-gradient(135deg,#fff,#eef6ff)">
               <div class="cta-title">Quero pesquisar</div>
-              <div class="muted">Consulte denúncias e siga com mais segurança.</div>
+              <div class="muted">chave para verificar possíveis irregularidades.</div>
             </a>
           </div>
         </section>
 
         <!-- DENUNCIAR -->
         <section id="denunciar" class="page card" aria-labelledby="h-denunciar">
-          <h1 id="h-denunciar">Denunciar um golpe</h1>
-          <p class="muted">Forneça o máximo de informações que tiver. Itens marcados como obrigatórios ajudam na verificação.</p>
+          <h1 id="h-denunciar">Realizar uma denúncia</h1>
+          <p class="muted">Insira os dados da conta utilizada pelo golpista</p>
           <form id="form-denuncia" style="max-width:1100px; margin:0 auto" novalidate>
             <div class="row">
               <label>
-                <span>Tipo de chave Pix <span class="badge badge-req">Obrigatório</span></span>
+                <span>Tipo de chave Pix<span class="req">*</span></span>
                 <select id="tipo" required aria-invalid="false">
                   <option value="">Selecione…</option>
                   <option>E-mail</option>
@@ -319,103 +352,127 @@
                 <small class="error" aria-live="polite">Escolha um tipo de chave.</small>
               </label>
               <label>
-                <span>Nome da conta <span class="badge badge-req">Obrigatório</span></span>
+                <span>Nome da conta<span class="req">*</span></span>
                 <input id="nome" type="text" required placeholder="Nome como aparece no banco" aria-invalid="false" />
                 <small class="error" aria-live="polite">Informe o nome da conta.</small>
               </label>
             </div>
+            
             <div class="row">
-            <label>
-              <span>Chave Pix <span class="badge badge-req">Obrigatório</span></span>
-              <input id="chave_pix" type="text" required placeholder="Digite a chave pix (email, tel, cpf, etc)" aria-invalid="false" />
-              <small class="error" aria-live="polite">Informe a chave pix denunciada.</small>
-            </label>
-            <label>
-              <span>CPF/CNPJ <span class="badge badge-req">Obrigatório</span></span>
-              <input id="docparcial" type="text" required inputmode="numeric" placeholder="***.123.***-** / **.***.***/0001-**" aria-invalid="false" />
-              <small class="error" aria-live="polite">Informe o CPF/CNPJ (mesmo que parcial).</small>
-            </label>
-          </div>
+              <label>
+                <span>Chave Pix<span class="req">*</span></span>
+                <input id="chave_pix" type="text" required placeholder="Digite a chave pix (email, tel, cpf, etc)" aria-invalid="false" />
+                <small class="error" aria-live="polite">Informe a chave pix denunciada.</small>
+              </label>
+              <label>
+                <span>CPF/CNPJ (parcial)<span class="req">*</span></span>
+                <input id="docparcial" type="text" required inputmode="numeric" placeholder="***.123.***-** / **.***.***/0001-**" aria-invalid="false" />
+                <small class="error" aria-live="polite">Informe o CPF/CNPJ (mesmo que parcial).</small>
+              </label>
+            </div>
 
-          <div class="row">
-            <label>
-              <span>Agência <span class="badge badge-opt">Opcional</span></span>
-              <input id="ag" type="text" inputmode="numeric" placeholder="0001" aria-invalid="false" />
-              <small class="error" aria-live="polite">Informe a agência.</small>
-            </label>
-            <label>
-              <span>Conta <span class="badge badge-opt">Opcional</span></span>
-              <input id="cc" type="text" inputmode="numeric" placeholder="123456-7" aria-invalid="false" />
-              <small class="error" aria-live="polite">Informe a conta.</small>
-            </label>
-          </div>
+            <div class="row">
+              <label>
+                <span>Agência</span>
+                <input id="ag" type="text" inputmode="numeric" placeholder="0001" aria-invalid="false" />
+              </label>
+              <label>
+                <span>Conta</span>
+                <input id="cc" type="text" inputmode="numeric" placeholder="123456-7" aria-invalid="false" />
+              </label>
+            </div>
 
-          <div class="row">
             <label>
-              <span>Banco <span class="badge badge-req">Obrigatório</span></span>
-              <input id="banco" type="text" required placeholder="Ex.: Banco X" aria-invalid="false" />
-              <small class="error" aria-live="polite">Informe o banco.</small>
+              <span>Valor</span>
+              <input id="valor" type="text" inputmode="decimal" placeholder="Ex.: 350,00" />
+              <small class="hint">Informe o valor aproximado da transação (opcional).</small>
             </label>
-            <label>
-              <span>Número do BO <span class="badge badge-req">Obrigatório</span></span>
-              <input id="bo" type="text" required placeholder="2025-000000" />
-              <small class="error" aria-live="polite">Informe o número do B.O.</small>
-            </label>
-          </div>
-          
-          <label>
-            <span>Anexar B.O <span class="badge badge-req">Obrigatório</span></span>
-            <input type="file" id="anexo" required accept=".pdf,.jpg,.jpeg,.png" />
-            <small class="error" aria-live="polite">O anexo do B.O. é obrigatório.</small>
-          </label>
 
-          <label>
-            <span>Confirmação <span class="badge badge-opt">Opcional</span></span>
-            <textarea id="desc" rows="3" placeholder="Conte, com serenidade, o que aconteceu"></textarea>
-          </label>
-          
-          <div class="actions" style="justify-content:center">
-            <a class="btn ghost" data-route href="#/hub">← Voltar</a>
-            <button class="btn primary" type="submit">Confirmar denúncia</button>
-          </div>
-          <p id="flash" class="sr-only" aria-live="polite"></p>
-          </form>
+            <div class="row">
+              <label>
+                <span>Banco<span class="req">*</span></span>
+                <input id="banco" type="text" required placeholder="Ex.: Banco X" aria-invalid="false" />
+                <small class="error" aria-live="polite">Informe o banco.</small>
+              </label>
+              <label>
+                <span>Número do BO<span class="req">*</span></span>
+                <input id="bo" type="text" required placeholder="2025-000000" aria-invalid="false" />
+                <small class="error" aria-live="polite">Informe o número do B.O.</small>
+              </label>
+            </div>
+            
+            <label>
+              <span>Anexar B.O<span class="req">*</span></span>
+              <input id="bo-file" type="file" accept=".pdf,.jpg,.jpeg,.png" required aria-invalid="false" />
+              <small class="error" aria-live="polite">Anexe o B.O (PDF/JPG/PNG).</small>
+            </label>
+            
+            <label>
+              <span>Descrição</span>
+              <textarea id="desc" rows="3" placeholder="Conte, com serenidade, o que aconteceu"></textarea>
+            </label>
+            
+            <div class="actions" style="justify-content:center">
+              <button class="btn primary" type="submit">Confirmar denúncia</button>
+            </div>
+            <p id="flash" class="sr-only" aria-live="polite"></p>
+          </form>        
         </section>
 
         <!-- PESQUISAR -->
         <section id="pesquisar" class="page card" aria-labelledby="h-pesquisar">
           <h1 id="h-pesquisar">Pesquisar denúncias</h1>
 
-          <div class="search-bar">
-            <p class="label">Filtre pela natureza da chave.</p>
-            <div class="controls">
-              <input id="q" type="search" placeholder="Digite sua busca" />
-              <button id="btn-buscar" class="btn primary" type="button">Buscar</button>
-              <button id="btn-limpar" class="btn ghost" type="button">Limpar</button>
-              <a id="btn-voltar" class="btn ghost" data-route href="#/hub">← Voltar</a>
+          <div class="search-wrap">
+            <div class="search-controls">
+              <!-- Filtro por Tipo de chave Pix -->
+              <label style="max-width:420px">
+                <span>Tipo de chave Pix</span>
+                <select id="filtro-tipo">
+                  <option value="">Todos os tipos</option>
+                  <option>E-mail</option>
+                  <option>Telefone</option>
+                  <option>CPF</option>
+                  <option>CNPJ</option>
+                  <option>Chave aleatória</option>
+                </select>
+              </label>
+
+              <div class="suggestions">
+                <input id="q" class="search-input" type="search" placeholder="Digite sua busca (tipo, nome, banco, BO...)" aria-autocomplete="list" aria-controls="sug-list" aria-expanded="false" />
+                <div id="sug-list" class="suggestions-list" role="listbox" aria-label="Sugestões"></div>
+              </div>
+              <div class="actions">
+                <button id="btn-buscar" class="btn primary" type="button">Buscar</button>
+                <button id="btn-limpar" class="btn ghost" type="button">Limpar</button>
+              </div>
             </div>
-          </div>
 
-          <div class="muted" style="margin:0 0 8px">
-            <strong>Legenda:</strong>
-            <span class="badge" style="background:var(--warn)">5 Risco de Golpe</span>
-            <span class="badge" style="background:var(--amber)">10 Grave risco de golpe</span>
-            <span class="badge" style="background:var(--danger); color:#fff">15 Gravíssimo risco de golpe</span>
-          </div>
+            <div class="legend">
+              <strong>Legenda:</strong>
+              <span class="badge" style="background:var(--warn)">5 Risco de golpe</span>
+              <span class="badge" style="background:var(--amber)">10 Grave risco de golpe</span>
+              <span class="badge" style="background:var(--danger); color:#fff">15 Gravíssimo risco de golpe</span>
+              <span class="badge">&lt;5 Baixo risco</span>
+            </div>
 
-          <div style="overflow:auto">
-            <table aria-label="Resultados de pesquisa" id="resultados">
-              <thead>
-                <tr>
-                  <th>Nome da Conta</th>
-                  <th>CPF/CNPJ</th>
-                  <th>Banco</th>
-                  <th>Chave Pix (Exemplo)</th>
-                  <th>Total de Denúncias</th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
+            <div style="overflow:auto">
+              <table aria-label="Resultados de pesquisa" id="resultados">
+                <thead>
+                  <tr>
+                    <th>Tipo de chave Pix</th>
+                    <th>Nome da conta</th>
+                    <th>Chave Pix</th>
+                    <th>Meio do CPF/CNPJ</th>
+                    <th>Agência</th>
+                    <th>Conta</th>
+                    <th>Banco</th>
+                    <th>Nº do BO</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
           </div>
         </section>
 
@@ -425,43 +482,61 @@
           <div class="grid" style="max-width:980px; margin:0 auto">
             <details>
               <summary><strong>Meu Pix aparece denunciado, como posso contestar?</strong></summary>
-              <p>Envie um e-mail para <a href="mailto:deolhonopix@gmail.com">deolhonopix@gmail.com</a>. Responderemos com orientações serenas.</p>
+              <p>R: Envie um e-mail para <a href="mailto:deolhonopix@gmail.com">deolhonopix@gmail.com</a>. Responderemos com orientações.</p>
+            </details>
+            <details>
+              <summary><strong>A minha denúncia é segura?</strong></summary>
+              <p>R: Sim. Suas informações não são expostas publicamente.</p>
+            </details>
+            <details>
+              <summary><strong>Em quanto tempo minha denúncia é processada?</strong></summary>
+              <p>R: Sua denúncia é processada de imediato e já fica disponível na nossa comunidade.</p>
             </details>
             <details>
               <summary><strong>Como eu faço um boletim de ocorrência?</strong></summary>
               <p>Acesse: <a href="https://www.delegaciaeletronica.policiacivil.sp.gov.br/ssp-de-cidadao/home" target="_blank" rel="noopener">Delegacia Eletrônica — SP</a>.</p>
             </details>
-            <details>
-              <summary><strong>Por que é obrigatório anexar o BO?</strong></summary>
-              <p>O B.O fortalece a confiabilidade das denúncias e ajuda a comunidade.</p>
-            </details>
-            <details>
-              <summary><strong>A minha denúncia é segura?</strong></summary>
-              <p>Sim. Suas informações não são expostas publicamente neste protótipo.</p>
-            </details>
-            <details>
-              <summary><strong>O site pode me ajudar com o banco ou estorno?</strong></summary>
-              <p>Este site é colaborativo e educativo; para questões bancárias, contate seu banco e as autoridades.</p>
-            </details>
-            <details>
-              <summary><strong>Em quanto tempo minha denúncia é processada?</strong></summary>
-              <p>No sistema real, a ideia é processamento imediato. Este protótipo demonstra apenas a interface.</p>
-            </details>
           </div>
         </section>
 
-        <!-- Recuperar senha -->
+        <!-- Recuperar senha (mock) -->
         <section id="recuperar" class="page card" aria-labelledby="h-recuperar">
           <h1 id="h-recuperar">Recuperar senha</h1>
           <form style="max-width:560px; margin:0 auto" novalidate>
             <label>
-              <span>E-mail cadastrado <span class="badge badge-req">Obrigatório</span></span>
+              <span>E-mail cadastrado<span class="req">*</span></span>
               <input type="email" required placeholder="voce@exemplo.com" aria-invalid="false" />
               <small class="error">Informe um e-mail válido.</small>
             </label>
             <div class="actions" style="justify-content:center">
-              <a class="btn ghost" data-route href="#/inicio">← Voltar</a>
               <a class="btn primary" data-route href="#/inicio">Enviar link</a>
+            </div>
+          </form>
+        </section>
+
+        <!-- PERFIL (somente após login) -->
+        <section id="perfil" class="page card" aria-labelledby="h-perfil">
+          <h1 id="h-perfil">Meu perfil</h1>
+          <p class="muted">Atualize seus dados. Campos com <span class="req">*</span> são obrigatórios.</p>
+          <form id="form-perfil" style="max-width:800px; margin:0 auto" novalidate>
+            <label>
+              <span>E-mail<span class="req">*</span></span>
+              <input id="prof-email" type="email" required placeholder="voce@exemplo.com" aria-invalid="false" />
+              <small class="error">Informe um e-mail válido.</small>
+            </label>
+            <label>
+              <span>Telefone<span class="req">*</span></span>
+              <input id="prof-tel" type="tel" required inputmode="tel" placeholder="(00) 00000-0000" aria-invalid="false" />
+              <small class="error">Informe um telefone válido.</small>
+            </label>
+            <label>
+              <span>Nova senha</span>
+              <input id="prof-pass" type="password" minlength="6" placeholder="Opcional — deixe em branco para manter" aria-invalid="false" />
+              <small class="hint">Se quiser trocar, informe pelo menos 6 caracteres.</small>
+            </label>
+            <div class="actions" style="justify-content:center">
+              <button class="btn primary" type="submit">Salvar alterações</button>
+              <button id="btn-logout" class="btn ghost" type="button">Sair</button>
             </div>
           </form>
         </section>
@@ -470,27 +545,30 @@
 
     <footer role="contentinfo">
       <div class="foot">
-        <div>© <span id="y"></span> De Olho no Pix · <a href="#/faq" data-route>FAQ</a></div>
-        <div><small class="muted">Protótipo sem coleta real de dados</small></div>
+        <div>© 2025 De Olho no Pix · <a href="#/faq" data-route>FAQ</a></div>
       </div>
     </footer>
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">Cadastro realizado com sucesso! Agora é só entrar.</div>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">Tudo certo.</div>
 
   <script>
-    // Atualiza o ano
-    document.getElementById('y').textContent = new Date().getFullYear();
+    /**********************
+     * CONFIG E HELPERS   *
+     **********************/
+    const API_BASE = 'http://localhost:8000/api'; // ⇦ ajuste aqui se precisar
 
-    // Preferências de tema (Original)
+    // Preferências de tema
     const body = document.body;
     const btnDark = document.getElementById('btn-dark');
     const btnContrast = document.getElementById('btn-contrast');
+
     const savedDark = localStorage.getItem('mode-dark') === 'true';
     const savedDal  = localStorage.getItem('mode-daltonico') === 'true';
     if(savedDark) body.classList.add('dark');
     if(savedDal)  body.classList.add('daltonico');
+
     function setDark(on){
       body.classList.toggle('dark', !!on);
       if(on){ body.classList.remove('daltonico'); localStorage.setItem('mode-daltonico','false'); }
@@ -504,71 +582,87 @@
     btnDark?.addEventListener('click', ()=> setDark(!body.classList.contains('dark')));
     btnContrast?.addEventListener('click', ()=> setDal(!body.classList.contains('daltonico')));
 
-    // Utilitário (Original)
+    // Utilitários
     function onlyDigits(v){return (v||'').replace(/\D+/g,'');}
-
-    // Máscaras (Original)
-    function maskCPF(el){
-      let v = onlyDigits(el.value).slice(0,11);
-      let out = '';
-      if(v.length>9){ out = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, (m,a,b,c,d)=> `${a}.${b}.${c}${d?'-'+d:''}`); }
-      else if(v.length>6){ out = v.replace(/(\d{3})(\d{3})(\d{0,3})/, (m,a,b,c)=> `${a}.${b}.${c}`); }
-      else if(v.length>3){ out = v.replace(/(\d{3})(\d{0,3})/, (m,a,b)=> `${a}.${b}`); }
-      else { out = v; }
-      el.value = out;
-      el.setAttribute('aria-invalid', v.length===11 ? 'false' : 'true');
-    }
-    function maskTEL(el){
-      let v = onlyDigits(el.value).slice(0,11);
-      if(v.length>10){ el.value = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3'); }
-      else if(v.length>6){ el.value = v.replace(/(\d{2})(\d{0,5})(\d{0,4})/, (m,a,b,c)=>`(${a}) ${b}${c?'-'+c:''}`); }
-      else if(v.length>2){ el.value = v.replace(/(\d{2})(\d{0,5})/, (m,a,b)=>`(${a}) ${b}`); }
-      else { el.value = v; }
-      el.setAttribute('aria-invalid', v.length===11 ? 'false' : 'true');
-    }
-    function maskAG(el){
-      let v = onlyDigits(el.value).slice(0,4);
-      el.value = v;
-      el.setAttribute('aria-invalid', v.length>0 ? 'false' : 'true');
-    }
-    function maskCC(el){
-      let v = onlyDigits(el.value).slice(0,12);
-      if(v.length>1){ el.value = v.replace(/(\d{1,11})(\d{0,1})/, (m,a,b)=> b?`${a}-${b}`:a ); }
-      else { el.value = v; }
-      el.setAttribute('aria-invalid', v.length>0 ? 'false' : 'true');
+    function maskMoney(el){
+      let v = onlyDigits(el.value);
+      if(!v){ el.value=''; return; }
+      v = (parseInt(v,10)||0).toString().padStart(3,'0');
+      const cents = v.slice(-2);
+      const int = v.slice(0,-2);
+      const intFmt = int.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+      el.value = `${intFmt},${cents}`;
     }
 
-    // Liga máscaras (Original)
+    // Máscaras
+    function maskCPF(el){ let v = onlyDigits(el.value).slice(0,11); let out=''; if(v.length>9){ out = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, (m,a,b,c,d)=> `${a}.${b}.${c}${d?'-'+d:''}`); } else if(v.length>6){ out = v.replace(/(\d{3})(\d{3})(\d{0,3})/, (m,a,b,c)=> `${a}.${b}.${c}`); } else if(v.length>3){ out = v.replace(/(\d{3})(\d{0,3})/, (m,a,b)=> `${a}.${b}`); } else { out = v; } el.value = out; el.setAttribute('aria-invalid', v.length===11 ? 'false' : 'true'); }
+    function maskTEL(el){ let v = onlyDigits(el.value).slice(0,11); if(v.length>10){ el.value = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3'); } else if(v.length>6){ el.value = v.replace(/(\d{2})(\d{0,5})(\d{0,4})/, (m,a,b,c)=>`(${a}) ${b}${c?'-'+c:''}`); } else if(v.length>2){ el.value = v.replace(/(\d{2})(\d{0,5})/, (m,a,b)=>`(${a}) ${b}`); } else { el.value = v; } el.setAttribute('aria-invalid', v.length===11 ? 'false' : 'true'); }
+    function maskAG(el){ let v = onlyDigits(el.value).slice(0,4); el.value = v; el.setAttribute('aria-invalid', v.length>0 ? 'false' : 'true'); }
+    function maskCC(el){ let v = onlyDigits(el.value).slice(0,12); if(v.length>1){ el.value = v.replace(/(\d{1,11})(\d{0,1})/, (m,a,b)=> b?`${a}-${b}`:a ); } else { el.value = v; } el.setAttribute('aria-invalid', v.length>0 ? 'false' : 'true'); }
+
     const cpf = document.getElementById('cpf');
     const tel = document.getElementById('tel');
     const ag  = document.getElementById('ag');
     const cc  = document.getElementById('cc');
+    const valor = document.getElementById('valor');
     if(cpf){ cpf.addEventListener('input', ()=>maskCPF(cpf)); }
     if(tel){ tel.addEventListener('input', ()=>maskTEL(tel)); }
     if(ag){  ag.addEventListener('input', ()=>maskAG(ag)); }
     if(cc){  cc.addEventListener('input', ()=>maskCC(cc)); }
+    if(valor){ valor.addEventListener('input', ()=>maskMoney(valor)); }
 
-    // Roteador simples (Original - ESSA ERA A PARTE FALTANTE)
-    const routes = ["inicio","cadastro","hub","denunciar","pesquisar","faq","recuperar"];
+    // Toast helper
+    const toast = document.getElementById('toast');
+    function showToast(msg, type='success'){ if(!toast) return; toast.textContent = msg; toast.classList.remove('error','success'); toast.classList.add(type==='error'?'error':'success'); toast.classList.add('show'); setTimeout(()=> toast.classList.remove('show'), 3000); }
+
+    // Estado em memória para pesquisa/sugestões (resultado mais recente da API)
+    let lastResults = [];
+
+    // Autorização
+    function authHeaders(extra={}){
+      const t = localStorage.getItem('pix-token');
+      return {
+        'Accept': 'application/json',
+        ...(extra||{}),
+        ...(t ? { 'Authorization': `Bearer ${t}` } : {})
+      };
+    }
+
+    /**********************
+     * ROTEAMENTO & NAV   *
+     **********************/
+    const routes = ["inicio","cadastro","hub","denunciar","pesquisar","faq","recuperar","perfil"];
     function setActive(slug){
       routes.forEach(id=>{
         const el = document.getElementById(id);
         if(!el) return;
         el.classList.toggle('active', id===slug);
       });
+      // aria-current
       document.querySelectorAll('[data-route]').forEach(a=>{
         const dest = (a.getAttribute('href')||'').replace(/^#\//,'');
         a.setAttribute('aria-current', dest===slug ? 'page' : 'false');
       });
+      // Topnav condicionada a login
       const nav = document.querySelector('.topnav');
+      const navPerfil = document.getElementById('nav-perfil');
+      const logged = !!localStorage.getItem('pix-token');
       if(nav){
-        if(['inicio','cadastro','recuperar'].includes(slug)){
+        if(!logged && ['inicio','cadastro','recuperar','faq'].includes(slug)){
           nav.querySelectorAll('a').forEach(a=>{
             const href = a.getAttribute('href');
             a.style.display = href==="#/faq" ? 'inline-flex' : 'none';
           });
+          if(logged && navPerfil) navPerfil.style.display = 'inline-flex';
+        } else if(['inicio','cadastro','recuperar'].includes(slug)){
+          nav.querySelectorAll('a').forEach(a=>{
+            const href = a.getAttribute('href');
+            a.style.display = href==="#/faq" ? 'inline-flex' : 'none';
+          });
+          if(logged && navPerfil) navPerfil.style.display = 'inline-flex';
         } else {
           nav.querySelectorAll('a').forEach(a=> a.style.display = 'inline-flex');
+          if(!logged && navPerfil) navPerfil.style.display = 'none';
         }
       }
     }
@@ -577,236 +671,306 @@
       const slug = h.replace(/^#\//,'');
       return routes.includes(slug)? slug : 'inicio';
     }
-    function onRoute(){ setActive(currentSlug()); }
+    function onRoute(){ setActive(currentSlug()); toggleBack(); }
     window.addEventListener('hashchange', onRoute);
 
-    // Render tabela de pesquisa (ATUALIZADO para API AGRUPADA)
-    function renderTable(rows) {
-      const tbody = document.getElementById('tbody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-    
-      if (!rows || rows.length === 0) {
-        // Atualiza o colspan para 5 colunas
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma denúncia encontrada.</td></tr>';
+    // Botão Voltar global
+    const btnVoltarGlobal = document.getElementById('btn-voltar-global');
+    function toggleBack(){ btnVoltarGlobal.style.display = (currentSlug()==='inicio') ? 'none' : 'inline-flex'; }
+    btnVoltarGlobal?.addEventListener('click', ()=>{
+      if(window.history.length > 1) window.history.back();
+      else window.location.hash = '#/hub';
+    });
+
+    /**********************
+     * RENDER PESQUISA    *
+     **********************/
+    /**********************
+     * RENDER PESQUISA    *
+     **********************/
+    function renderTable(rows){
+      const tbody = document.getElementById('tbody'); if(!tbody) return; tbody.innerHTML = '';
+      if(!rows || !rows.length){
+        // MUDANÇA 1: Colspan atualizado para 8 colunas
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">Nenhuma denúncia encontrada.</td></tr>';
         return;
       }
-    
       rows.forEach(r => {
+        // Mapeia os dados detalhados da API (schemas.Denuncia)
+        const tipo = r.tipo_chave_pix || '—';
+        const nome = r.nome_conta || '—';
+        const chave = r.chave_pix || '—';    // <-- MUDANÇA 2: Nova variável
+        const doc  = r.cpf_cnpj || '—';
+        const ag   = r.agencia || '—';
+        const cc   = r.conta || '—';
+        const banco= r.banco || '—';
+        const bo   = r.numero_bo || '—';
+        
+        let riskClass = 'risk-5'; 
+        
         const tr = document.createElement('tr');
-      
-        // Adiciona classes de risco baseadas na contagem
-        if (r.total_denuncias >= 10) {
-            tr.className = 'risk-15'; // Vermelho
-        } else if (r.total_denuncias >= 5) {
-            tr.className = 'risk-10'; // Âmbar
-        } else if (r.total_denuncias >= 2) {
-            tr.className = 'risk-5'; // Laranja claro
-        }
-      
-        // Monta as colunas com os dados da DenunciaAgrupada
+        tr.className = riskClass;
+
+        // MUDANÇA 3: Renderiza as 8 colunas
         tr.innerHTML = `
-          <td>${r.nome_conta}</td>
-          <td>${r.cpf_cnpj}</td>
-          <td>${r.banco}</td>
-          <td>${r.chave_pix_exemplo}</td>
-          <td><span class="badge" style="font-size: 14px;">${r.total_denuncias}</span></td>`;
+          <td>${tipo}</td>
+          <td>${nome}</td>
+          <td>${chave}</td>
+          <td>${doc}</td>
+          <td>${ag}</td>
+          <td>${cc}</td>
+          <td>${banco}</td>
+          <td>${bo}</td>`;
         tbody.appendChild(tr);
       });
     }
 
-    // Busca simples (ATUALIZADO para API)
+    /**********************
+     * BUSCA & SUGESTÕES  *
+     **********************/
     const q = document.getElementById('q');
+    const sugList = document.getElementById('sug-list');
+    const filtroTipo = document.getElementById('filtro-tipo');
+
+    function buildSuggestions(term){
+      if(!q || !sugList) return;
+      const t = (term||'').toLowerCase();
+      if(!t || !lastResults.length){
+        sugList.innerHTML = '';
+        sugList.classList.remove('show');
+        q.setAttribute('aria-expanded','false');
+        return;
+      }
+      const pool = new Set();
+      lastResults.forEach(r=>{
+        ['tipo','tipo_chave_pix','nome','nome_conta','banco','numero_bo','cpf_cnpj','doc','ag','cc'].forEach(k=>{
+          const v = String(r[k]||'');
+          if(v.toLowerCase().includes(t)) pool.add(v);
+        });
+      });
+      const list = Array.from(pool).slice(0,8);
+      if(!list.length){
+        sugList.innerHTML='';
+        sugList.classList.remove('show');
+        q.setAttribute('aria-expanded','false');
+        return;
+      }
+      sugList.innerHTML = list.map(v=>`<div class="suggestion-item" role="option">${v}</div>`).join('');
+      sugList.classList.add('show'); q.setAttribute('aria-expanded','true');
+    }
+    sugList?.addEventListener('click', (e)=>{ const it = e.target.closest('.suggestion-item'); if(!it) return; q.value = it.textContent; doSearch(); sugList.classList.remove('show'); q.setAttribute('aria-expanded','false'); });
+    document.addEventListener('click', (e)=>{ if(!sugList.contains(e.target) && e.target!==q){ sugList.classList.remove('show'); q?.setAttribute('aria-expanded','false'); } });
+
+    async function doSearch(){
+      const term = (q?.value||'').trim();
+      const tipoSel = (filtroTipo?.value||'');
+      try{
+        const url = new URL(`${API_BASE}/denuncias`);
+        if(term) url.searchParams.append('q', term);
+        if(tipoSel) url.searchParams.append('tipo', tipoSel);
+        const resp = await fetch(url, { headers: authHeaders() });
+        if(!resp.ok){ throw new Error('Falha ao buscar denúncias'); }
+        const data = await resp.json();
+        lastResults = Array.isArray(data) ? data : [];
+        renderTable(lastResults);
+      }catch(err){
+        console.error(err);
+        showToast('Erro ao conectar ao servidor.', 'error');
+      }
+    }
+
     const btnBuscar = document.getElementById('btn-buscar');
     const btnLimpar = document.getElementById('btn-limpar');
-    
-    btnBuscar?.addEventListener('click', async () => {
-      const term = (q?.value || '').toLowerCase();
-      const url = new URL('http://localhost:8000/api/denuncias');
-      if (term) {
-        url.searchParams.append('q', term);
-      }
-      
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Falha ao buscar denúncias');
-        
-        const data = await response.json();
-        renderTable(data);
-        
-      } catch (error) {
-        console.error('Erro na busca:', error);
-        showToast('Erro ao conectar ao servidor.');
-      }
+    btnBuscar?.addEventListener('click', doSearch);
+    btnLimpar?.addEventListener('click', ()=>{
+      if(q){ q.value=''; }
+      if(filtroTipo){ filtroTipo.value=''; localStorage.removeItem('filtro-tipo'); }
+      lastResults = [];
+      renderTable(lastResults);
+    });
+    q?.addEventListener('input', ()=>{ buildSuggestions(q.value); });
+    q?.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); doSearch(); sugList.classList.remove('show'); q.setAttribute('aria-expanded','false'); } });
+    filtroTipo?.addEventListener('change', ()=>{
+      localStorage.setItem('filtro-tipo', filtroTipo.value||'');
+      doSearch();
     });
 
-    btnLimpar?.addEventListener('click', () => { 
-      if (q) { q.value = ''; }
-      btnBuscar?.click(); 
-    });
-
-    // Submissão de denúncia (ATUALIZADO para API)
-    const formDen = document.getElementById('form-denuncia');
-    
-    formDen?.addEventListener('submit', async (e) => {
+    /**********************
+     * LOGIN / LOGOUT     *
+     **********************/
+    const formLogin = document.getElementById('form-login');
+    formLogin?.addEventListener('submit', async (e)=>{
       e.preventDefault();
+      const email = document.getElementById('login-email');
+      const pass = document.getElementById('login-pass');
+      let ok = true;
+      if(!email.value || !email.checkValidity()){ email.classList.add('field-error'); document.getElementById('err-login-email')?.classList.add('show'); email.setAttribute('aria-invalid','true'); ok=false; } else { email.classList.remove('field-error'); document.getElementById('err-login-email')?.classList.remove('show'); email.setAttribute('aria-invalid','false'); }
+      if(!pass.value || pass.value.length<6){ pass.classList.add('field-error'); document.getElementById('err-login-pass')?.classList.add('show'); pass.setAttribute('aria-invalid','true'); ok=false; } else { pass.classList.remove('field-error'); document.getElementById('err-login-pass')?.classList.remove('show'); pass.setAttribute('aria-invalid','false'); }
+      if(!ok){ showToast('Preencha os campos obrigatórios.', 'error'); return; }
+      try{
+        const resp = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
+          body: JSON.stringify({ email: email.value, senha: pass.value })
+        });
+        const data = await resp.json();
+        if(!resp.ok){ throw new Error(data.detail || 'E-mail ou senha incorretos'); }
+        localStorage.setItem('pix-token', data.access_token || data.token || '');
+        document.getElementById('nav-perfil').style.display = 'inline-flex';
+        window.location.hash = '#/hub';
+        showToast('Login efetuado com sucesso!', 'success');
+      }catch(err){
+        console.error('Erro no login:', err);
+        showToast(`Erro: ${err.message}`, 'error');
+      }
+    });
 
-      if (!formDen.checkValidity()) {
-        formDen.querySelector(':invalid')?.focus();
-        showToast('Preencha todos os campos obrigatórios.');
+    document.getElementById('btn-logout')?.addEventListener('click', ()=>{
+      localStorage.removeItem('pix-token');
+      document.getElementById('nav-perfil').style.display='none';
+      window.location.hash = '#/inicio';
+      showToast('Você saiu da sua conta.', 'success');
+    });
+
+    /**********************
+     * CADASTRO (REGISTER)*
+     **********************/
+    const formCad = document.getElementById('form-cadastro');
+    formCad?.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      if(!formCad.checkValidity()){
+        showToast('Preencha os campos obrigatórios.', 'error');
         return;
       }
-
-      const formData = new FormData();
-      
-      // Obrigatórios
-      formData.append('anexo', document.getElementById('anexo').files[0]);
-      formData.append('tipo_chave_pix', document.getElementById('tipo').value);
-      formData.append('nome_conta', document.getElementById('nome').value);
-      formData.append('chave_pix', document.getElementById('chave_pix').value);
-      formData.append('numero_bo', document.getElementById('bo').value);
-      
-      // Opcionais
-      const doc = document.getElementById('docparcial')?.value;
-      const ag = document.getElementById('ag')?.value;
-      const cc = document.getElementById('cc')?.value;
-      const banco = document.getElementById('banco')?.value;
-      const desc = document.getElementById('desc')?.value;
-
-      if(doc) formData.append('cpf_cnpj', doc);
-      if(ag) formData.append('agencia', ag);
-      if(cc) formData.append('conta', cc);
-      if(banco) formData.append('banco', banco);
-      if(desc) formData.append('descricao', desc);
-
-      try {
-        showToast('Enviando denúncia...');
-        
-        const response = await fetch('http://localhost:8000/api/denuncias', {
+      const nome = document.getElementById('cad-nome').value;
+      const cpfVal = document.getElementById('cpf').value;
+      const telefone = document.getElementById('tel').value;
+      const email = document.getElementById('cad-email').value;
+      const senha = document.getElementById('cad-pass').value;
+      try{
+        const resp = await fetch(`${API_BASE}/register`, {
           method: 'POST',
-          body: formData,
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
+          body: JSON.stringify({
+            email,
+            nome,
+            cpf: onlyDigits(cpfVal),
+            telefone: onlyDigits(telefone),
+            senha
+          })
         });
+        const data = await resp.json();
+        if(!resp.ok){ throw new Error(data.detail || 'Erro ao cadastrar'); }
+        window.location.hash = '#/inicio';
+        showToast('Cadastro realizado com sucesso! Agora é só entrar.', 'success');
+      }catch(err){
+        console.error('Erro no cadastro:', err);
+        showToast(`Erro: ${err.message}`, 'error');
+      }
+    });
 
-        if (!response.ok) {
-          const err = await response.json();
-          throw new Error(err.detail || 'Erro desconhecido no servidor');
+    /**********************
+     * DENÚNCIA (POST)    *
+     **********************/
+    const formDen = document.getElementById('form-denuncia');
+    formDen?.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      
+      // Campos do formulário
+      const tipo = document.getElementById('tipo');
+      const nome = document.getElementById('nome');
+      const chavePix = document.getElementById('chave_pix'); // <-- NOSSO CAMPO
+      const docp = document.getElementById('docparcial'); // <-- NOSSO CAMPO
+      const banco= document.getElementById('banco');     // <-- NOSSO CAMPO
+      const bo = document.getElementById('bo');         // <-- NOSSO CAMPO
+      const boFile = document.getElementById('bo-file');
+      
+      // Campos opcionais (do seu amigo)
+      const agi  = document.getElementById('ag');
+      const cci  = document.getElementById('cc');
+      const val  = document.getElementById('valor');
+      const desc = document.getElementById('desc');
+
+      // Validação manual (do seu amigo)
+      const required = [tipo, nome, chavePix, docp, banco, bo, boFile];
+      let ok = true;
+      required.forEach(el=>{
+        if (!el) return; // Segurança
+        const valid = (el.type==='file') ? (el.files && el.files.length>0) : !!el.value;
+        if(!valid){ 
+          el.classList.add('field-error'); 
+          el.setAttribute('aria-invalid','true'); 
+          el.parentElement.querySelector('.error')?.classList.add('show'); 
+          ok=false; 
+        } else { 
+          el.classList.remove('field-error'); 
+          el.setAttribute('aria-invalid','false'); 
+          el.parentElement.querySelector('.error')?.classList.remove('show'); 
         }
+      });
+      if(!ok){ showToast('Preencha os campos obrigatórios.', 'error'); return; }
 
-        showToast('Denúncia registrada com sucesso!');
+      // Monta o FormData
+      const fd = new FormData();
+      fd.append('anexo', boFile.files[0]);
+      fd.append('tipo_chave_pix', tipo.value);
+      fd.append('nome_conta', nome.value);
+      fd.append('chave_pix', chavePix.value); // <-- NOSSO CAMPO
+      fd.append('numero_bo', bo.value);
+      fd.append('cpf_cnpj', docp.value);
+      fd.append('banco', banco.value);
+
+      // Opcionais
+      if(agi && agi.value) fd.append('agencia', agi.value);
+      if(cci && cci.value) fd.append('conta', cci.value);
+      if(desc && desc.value) fd.append('descricao', desc.value);
+      if(val && val.value) fd.append('valor', val.value); // (Backend vai ignorar, mas tudo bem)
+
+      try{
+        showToast('Enviando denúncia...', 'success');
+        const resp = await fetch(`${API_BASE}/denuncias`, {
+          method: 'POST',
+          headers: authHeaders(), // Frontend dele já faz autenticação!
+          body: fd
+        });
+        const data = await resp.json().catch(()=>({}));
+        if(!resp.ok){ throw new Error(data.detail || 'Erro desconhecido no servidor'); }
+        showToast('Denúncia registrada com sucesso!', 'success');
         formDen.reset();
         window.location.hash = '#/pesquisar';
-        btnLimpar?.click(); 
-
-      } catch (error) {
-        console.error('Falha ao enviar denúncia:', error);
-        showToast(`Erro: ${error.message}`);
+        await doSearch();
+      }catch(err){
+        console.error('Falha ao enviar denúncia:', err);
+        showToast(`Erro: ${err.message}`, 'error');
       }
     });
 
-    // Toast (Original)
-    function showToast(msg){
-      const t = document.getElementById('toast');
-      if(!t) return; t.textContent = msg; t.classList.add('show');
-      setTimeout(()=> t.classList.remove('show'), 3000);
-    }
-    
-    // Cadastro (ATUALIZADO para API)
-    const formCad = document.getElementById('form-cadastro');
-    
-    formCad?.addEventListener('submit', async (e) => {
+    /**********************
+     * PERFIL (mock local)*
+     **********************/
+    const formPerfil = document.getElementById('form-perfil');
+    formPerfil?.addEventListener('submit', (e)=>{
       e.preventDefault();
-      if (!formCad.checkValidity()) {
-        showToast('Preencha os campos obrigatórios.');
-        return;
-      }
-
-      // Get form data
-      const nome = formCad.querySelector('input[type="text"]').value;
-      const cpf = document.getElementById('cpf').value;
-      const telefone = document.getElementById('tel').value;
-      const email = formCad.querySelector('input[type="email"]').value;
-      const senha = formCad.querySelector('input[type="password"]').value;
-
-      try {
-        const response = await fetch('http://localhost:8000/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            nome: nome,
-            cpf: onlyDigits(cpf), // Envia só os dígitos
-            telefone: onlyDigits(telefone), // Envia só os dígitos
-            senha: senha
-          }),
-        });
-        
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.detail || 'Erro ao cadastrar');
-        }
-
-        // Sucesso!
-        window.location.hash = '#/inicio';
-        showToast('Cadastro realizado com sucesso! Agora é só entrar.');
-
-      } catch (error) {
-        console.error('Erro no cadastro:', error);
-        showToast(`Erro: ${error.message}`);
-      }
-    });
-    
-    // NOVO: Listener para o formulário de LOGIN
-    const formLogin = document.querySelector('#inicio form');
-    formLogin?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!formLogin.checkValidity()) {
-        showToast('Preencha e-mail e senha.');
-        return;
-      }
-      
-      const email = document.getElementById('login-email').value;
-      const senha = document.getElementById('login-pass').value;
-      
-      try {
-        const response = await fetch('http://localhost:8000/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            senha: senha
-          }),
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.detail || 'E-mail ou senha incorretos');
-        }
-        
-        // SUCESSO NO LOGIN
-        // 1. Salva o token no localStorage
-        localStorage.setItem('pix-token', data.access_token);
-        
-        // 2. Redireciona para o Hub
-        window.location.hash = '#/hub';
-        showToast('Login efetuado com sucesso!');
-        
-      } catch (error) {
-        console.error('Erro no login:', error);
-        showToast(`Erro: ${error.message}`);
-      }
+      const pe = document.getElementById('prof-email');
+      const pt = document.getElementById('prof-tel');
+      const pp = document.getElementById('prof-pass');
+      let ok = true;
+      if(!pe.value || !pe.checkValidity()){ pe.classList.add('field-error'); pe.setAttribute('aria-invalid','true'); ok=false; } else { pe.classList.remove('field-error'); pe.setAttribute('aria-invalid','false'); }
+      if(!pt.value || onlyDigits(pt.value).length!==11){ pt.classList.add('field-error'); pt.setAttribute('aria-invalid','true'); ok=false; } else { pt.classList.remove('field-error'); pt.setAttribute('aria-invalid','false'); }
+      if(pp.value && pp.value.length<6){ pp.classList.add('field-error'); pp.setAttribute('aria-invalid','true'); ok=false; } else { pp.classList.remove('field-error'); pp.setAttribute('aria-invalid','false'); }
+      if(!ok){ showToast('Corrija os campos destacados.', 'error'); return; }
+      showToast('Perfil atualizado com sucesso!', 'success');
     });
 
-    // Renderização final (ATUALIZADO)
-    // Combina o roteador e o carregamento da tabela
-    window.addEventListener('DOMContentLoaded', () => {
-      onRoute(); // Roda o roteador primeiro
-      btnLimpar?.click(); // Carrega a tabela da API
+    // Primeira renderização
+    window.addEventListener('DOMContentLoaded', ()=>{
+      onRoute();
+      // restaura filtro
+      const savedFiltro = localStorage.getItem('filtro-tipo') || '';
+      const filtroTipoEl = document.getElementById('filtro-tipo');
+      if(filtroTipoEl){ filtroTipoEl.value = savedFiltro; }
+      // carrega lista inicial
+      if(currentSlug()==='pesquisar') doSearch();
     });
   </script>
 </body>
