@@ -1,6 +1,6 @@
 import bcrypt
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select, or_, func
+from sqlalchemy.sql import select, or_, func, update
 # Importamos os arquivos que já criamos
 import models, schemas
 # ==================================
@@ -140,3 +140,32 @@ async def get_denuncia_anexo_by_id(db: AsyncSession, denuncia_id: int) -> bytes 
     )
     result = await db.execute(statement)
     return result.scalars().first() # Retorna os bytes do arquivo ou None
+
+async def update_user(db: AsyncSession, user: models.Usuario, updates: schemas.UsuarioUpdate) -> models.Usuario:
+    """
+    Atualiza o perfil de um usuário (email, telefone, senha).
+    """
+    # Converte o schema Pydantic em um dicionário,
+    # mas só com os campos que foram realmente enviados (exclude_unset=True)
+    update_data = updates.model_dump(exclude_unset=True)
+
+    # Se o usuário enviou uma nova senha...
+    if "senha" in update_data and update_data["senha"]:
+        # Criptografa a nova senha
+        hashed_password = hash_password(update_data["senha"])
+        # Atualiza o campo 'senha_hash' no banco
+        user.senha_hash = hashed_password
+
+    # Atualiza os outros campos (email, telefone)
+    if "nome" in update_data:
+        user.nome = update_data["nome"] # <-- ADICIONADO
+    if "email" in update_data:
+        user.email = update_data["email"]
+    if "telefone" in update_data:
+        user.telefone = update_data["telefone"]
+
+    # Salva as mudanças no banco
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user

@@ -37,6 +37,16 @@ class Usuario(UsuarioBase):
         # Permite que o Pydantic leia dados de um objeto SQLAlchemy
         from_attributes = True 
 
+class UsuarioUpdate(BaseModel):
+    """
+    Schema para ATUALIZAÇÃO de usuário.
+    Todos os campos são opcionais.
+    """
+    nome: Optional[str] = None  # <-- ADICIONADO
+    email: Optional[EmailStr] = None
+    telefone: Optional[str] = None
+    senha: Optional[str] = None
+
 
 # ==================================
 #         SCHEMAS DE LOGIN

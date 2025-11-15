@@ -109,6 +109,28 @@ async def login_for_access_token(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+# ==================================
+#       ROTAS DE PERFIL (NOVAS)
+# ==================================
+
+@app.get("/api/me", response_model=schemas.Usuario)
+async def read_users_me(current_user: models.Usuario = Depends(auth.get_current_user)):
+    """
+    Rota para BUSCAR o perfil do usuário logado.
+    """
+    return current_user
+
+
+@app.patch("/api/me", response_model=schemas.Usuario)
+async def update_users_me(
+    updates: schemas.UsuarioUpdate,
+    current_user: models.Usuario = Depends(auth.get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Rota para ATUALIZAR o perfil do usuário logado.
+    """
+    return await crud.update_user(db=db, user=current_user, updates=updates)
 
 # ==================================
 #       ROTAS DE DENÚNCIA
