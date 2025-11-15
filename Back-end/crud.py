@@ -1,6 +1,6 @@
 import bcrypt
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select, or_, func, update
+from sqlalchemy.sql import select, or_, func, update, case
 # Importamos os arquivos que já criamos
 import models, schemas
 # ==================================
@@ -60,13 +60,48 @@ async def create_user(db: AsyncSession, user: schemas.UsuarioCreate) -> models.U
 async def get_denuncias_by_query(
     db: AsyncSession, 
     query: str | None, 
-    tipo: str | None  # <-- Novo parâmetro do amigo
-) -> list[models.Denuncia]:
+    tipo: str | None
+) -> list[tuple]:
     """
-    Busca denúncias na tela "Pesquisar" (MODO DETALHADO).
+    Busca denúncias AGRUPADAS por grupo_fraude_id.
+    Retorna uma lista de tuplas com os dados do grupo e a contagem.
     """
+
+    # --- LÓGICA DE AGREGAÇÃO DE CHAVES ---
+    # Vamos criar uma string com todas as chaves,
+    # exceto "Chave aleatória"
+    # --- LÓGICA DE AGREGAÇÃO DE CHAVES (CORRIGIDA) ---
+
+    # 1. Primeiro, criamos a lógica do 'DISTINCT' e 'CASE'
+    distinct_chaves_com_case = func.distinct(
+        case(
+            (models.Denuncia.tipo_chave_pix != 'Chave aleatória', models.Denuncia.chave_pix),
+            else_=None
+        )
+    )
     
-    statement = select(models.Denuncia).order_by(models.Denuncia.data_denuncia.desc())
+    # 2. Agora, aplicamos o GROUP_CONCAT usando o operador .op()
+    # Isso gera o SQL: GROUP_CONCAT(... SEPARATOR '\n')
+    chaves_agregadas = func.group_concat(
+        distinct_chaves_com_case.op('SEPARATOR')('\n')
+    ).label("chave_pix_exemplo")
+# -----------------------------------
+    # -----------------------------------
+
+    statement = select(
+        models.Denuncia.nome_conta,
+        models.Denuncia.cpf_cnpj,
+        models.Denuncia.banco,
+        chaves_agregadas, # <-- MUDANÇA AQUI
+        func.count(models.Denuncia.id_denuncia).label("total_denuncias")
+    ).group_by(
+        models.Denuncia.grupo_fraude_id,
+        models.Denuncia.nome_conta,
+        models.Denuncia.cpf_cnpj,
+        models.Denuncia.banco
+    ).order_by(
+        func.count(models.Denuncia.id_denuncia).desc()
+    )
 
     # Filtro 1: Pelo termo de busca (query)
     if query:
@@ -80,13 +115,13 @@ async def get_denuncias_by_query(
                 models.Denuncia.cpf_cnpj.like(like_query)
             )
         )
-    
+
     # Filtro 2: Pelo tipo de chave (do amigo)
     if tipo:
         statement = statement.filter(models.Denuncia.tipo_chave_pix == tipo)
-    
+
     result = await db.execute(statement)
-    return result.scalars().all()  # Retorna a lista detalhada
+    return result.all()
 
 async def create_denuncia(
     db: AsyncSession, 
@@ -95,8 +130,8 @@ async def create_denuncia(
     chave_pix: str,
     nome_conta: str,
     numero_bo: str,
-    cpf_cnpj: str, # MUDOU
-    banco: str,   # MUDOU
+    cpf_cnpj: str,
+    banco: str,
     # Campos opcionais
     agencia: str | None,
     conta: str | None,
@@ -105,11 +140,12 @@ async def create_denuncia(
     """
     Salva uma nova denúncia no banco, incluindo o arquivo B.O.
     """
-    grupo_fraude_id = ""
-    if tipo_chave_pix == "Chave aleatória":
-        grupo_fraude_id = f"{nome_conta.lower().strip()}_{cpf_cnpj.strip()}"
-    else:
-        grupo_fraude_id = chave_pix.lower().strip()
+
+    # --- LÓGICA DE AGRUPAMENTO ATUALIZADA ---
+    # O grupo agora é SEMPRE definido pela conta, não pela chave.
+    grupo_fraude_id = f"{nome_conta.lower().strip()}_{cpf_cnpj.strip()}"
+    # ----------------------------------------
+
     db_denuncia = models.Denuncia(
         anexo=anexo_bytes,
         tipo_chave_pix=tipo_chave_pix,
@@ -121,9 +157,9 @@ async def create_denuncia(
         agencia=agencia,
         conta=conta,
         descricao=descricao,
-        grupo_fraude_id=grupo_fraude_id  # <-- ADICIONE ESTA LINHA
+        grupo_fraude_id=grupo_fraude_id
     )
-    
+
     db.add(db_denuncia)
     await db.commit()
     await db.refresh(db_denuncia)

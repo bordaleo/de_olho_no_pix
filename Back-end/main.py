@@ -182,7 +182,7 @@ async def criar_denuncia(
 
 
 # Esta é a rota de BUSCA (GET)
-@app.get("/api/denuncias", response_model=List[schemas.Denuncia])
+@app.get("/api/denuncias", response_model=List[schemas.DenunciaAgrupada]) # <-- MUDANÇA (response_model)
 async def pesquisar_denuncias(
     q: str | None = None,
     tipo: str | None = None, 
@@ -190,12 +190,24 @@ async def pesquisar_denuncias(
     current_user: models.Usuario = Depends(auth.get_current_user)
 ):
     """
-    Rota para a tela '#pesquisar' (MODO DETALHADO).
+    Rota para a tela '#pesquisar' (MODO AGRUPADO).
     AGORA PROTEGIDA POR LOGIN.
     """
-    denuncias = await crud.get_denuncias_by_query(db, query=q, tipo=tipo)
-    return denuncias
+    # O CRUD agora retorna tuplas (linhas)
+    resultados_tuplas = await crud.get_denuncias_by_query(db, query=q, tipo=tipo)
 
+    # Mapeia as tuplas para o nosso schema DenunciaAgrupada
+    denuncias_agrupadas = [
+        schemas.DenunciaAgrupada(
+            nome_conta=r.nome_conta,
+            cpf_cnpj=r.cpf_cnpj,
+            banco=r.banco,
+            chave_pix_exemplo=r.chave_pix_exemplo,
+            total_denuncias=r.total_denuncias
+        ) for r in resultados_tuplas
+    ]
+
+    return denuncias_agrupadas
 
 @app.get("/api/denuncias/{denuncia_id}/anexo")
 async def baixar_anexo(denuncia_id: int, db: AsyncSession = Depends(get_db)):

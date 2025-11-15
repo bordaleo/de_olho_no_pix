@@ -457,14 +457,11 @@
               <table aria-label="Resultados de pesquisa" id="resultados">
                 <thead>
                   <tr>
-                    <th>Tipo de chave Pix</th>
-                    <th>Nome da conta</th>
-                    <th>Chave Pix</th>
-                    <th>Meio do CPF/CNPJ</th>
-                    <th>Agência</th>
-                    <th>Conta</th>
+                    <th>Nome da Conta</th>
+                    <th>CPF/CNPJ</th>
                     <th>Banco</th>
-                    <th>Nº do BO</th>
+                    <th>Chave Pix (Exemplo)</th>
+                    <th>Total de Denúncias</th>
                   </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
@@ -709,42 +706,37 @@
     /**********************
      * RENDER PESQUISA    *
      **********************/
-    /**********************
-     * RENDER PESQUISA    *
-     **********************/
     function renderTable(rows){
       const tbody = document.getElementById('tbody'); if(!tbody) return; tbody.innerHTML = '';
       if(!rows || !rows.length){
-        // MUDANÇA 1: Colspan atualizado para 8 colunas
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">Nenhuma denúncia encontrada.</td></tr>';
+        // MUDANÇA 1: Colspan atualizado para 5 colunas
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma denúncia encontrada.</td></tr>';
         return;
       }
       rows.forEach(r => {
-        // Mapeia os dados detalhados da API (schemas.Denuncia)
-        const tipo = r.tipo_chave_pix || '—';
+        // Mapeia os dados da API (schemas.DenunciaAgrupada)
         const nome = r.nome_conta || '—';
-        const chave = r.chave_pix || '—';    // <-- MUDANÇA 2: Nova variável
         const doc  = r.cpf_cnpj || '—';
-        const ag   = r.agencia || '—';
-        const cc   = r.conta || '—';
         const banco= r.banco || '—';
-        const bo   = r.numero_bo || '—';
-        
-        let riskClass = 'risk-5'; 
-        
+        const chave = (r.chave_pix_exemplo || '—').replace(/\n/g, '<br>');
+        const denunciasNum = Number(r.total_denuncias || 0);
+
+        // Lógica de Risco (agora funciona!)
+        let riskClass = '';
+        if(denunciasNum >= 15) riskClass = 'risk-15'; // Era 10 no HTML, mas 15 é mais impactante
+        else if(denunciasNum >= 10) riskClass = 'risk-10'; // Era 5
+        else if(denunciasNum >= 5) riskClass = 'risk-5'; // Era 2
+
         const tr = document.createElement('tr');
         tr.className = riskClass;
 
-        // MUDANÇA 3: Renderiza as 8 colunas
+        // MUDANÇA 2: Renderiza as 5 colunas agrupadas
         tr.innerHTML = `
-          <td>${tipo}</td>
           <td>${nome}</td>
-          <td>${chave}</td>
           <td>${doc}</td>
-          <td>${ag}</td>
-          <td>${cc}</td>
           <td>${banco}</td>
-          <td>${bo}</td>`;
+          <td>${chave}</td>
+          <td><span class="badge" style="font-size: 14px;">${denunciasNum}</span></td>`;
         tbody.appendChild(tr);
       });
     }
