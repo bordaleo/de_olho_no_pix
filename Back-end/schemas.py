@@ -97,6 +97,11 @@ class Denuncia(BaseModel):
     class Config:
         from_attributes = True
 
+class ResetRequest(BaseModel):
+    """Schema para receber o pedido de troca de senha final."""
+    token: str
+    new_password: str
+
 class DenunciaAgrupada(BaseModel):
     """
     Schema para SAÍDA (Pesquisa).

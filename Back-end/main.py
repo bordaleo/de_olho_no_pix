@@ -3,7 +3,8 @@ import bcrypt
 import auth
 from datetime import datetime, timedelta
 from typing import List, Annotated
-
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
+from pydantic import EmailStr, BaseModel
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form, Response
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
@@ -18,6 +19,18 @@ from dotenv import load_dotenv
 # ==================================
 # Vamos ler os segredos do nosso arquivo .env
 load_dotenv()
+# --- CONFIGURAÇÃO DE E-MAIL ---
+conf = ConnectionConfig(
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME"),
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD"),
+    MAIL_FROM = os.getenv("MAIL_FROM"),
+    MAIL_PORT = int(os.getenv("MAIL_PORT", 587)),
+    MAIL_SERVER = os.getenv("MAIL_SERVER"),
+    MAIL_STARTTLS = True,
+    MAIL_SSL_TLS = False,
+    USE_CREDENTIALS = True,
+    VALIDATE_CERTS = True
+)
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -73,6 +86,8 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
 
 @app.post("/api/register", response_model=schemas.Usuario, status_code=status.HTTP_201_CREATED)
 async def register_user(user: schemas.UsuarioCreate, db: AsyncSession = Depends(get_db)):
@@ -108,6 +123,93 @@ async def login_for_access_token(
         data={"sub": user.email, "id": user.id_usuario}
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@app.post("/api/password-recovery")
+async def password_recovery(email_data: EmailSchema, db: AsyncSession = Depends(get_db)):
+    """
+    Envia um e-mail de recuperação se o usuário existir.
+    """
+    # 1. Verifica se o e-mail existe no banco
+    # (Pega o primeiro e-mail da lista, pois o front manda um array)
+    email_alvo = email_data.email[0]
+    user = await crud.get_user_by_email(db, email=email_alvo)
+    
+    if not user:
+        # Por segurança, não dizemos se o e-mail existe ou não,
+        # apenas dizemos que se existir, foi enviado.
+        return {"message": "Se o e-mail existir, as instruções foram enviadas."}
+
+    # 2. Cria o Token de Recuperação (válido por 15 min)
+    # Usamos a mesma lógica do login, mas com tempo curto
+    reset_token = auth.create_access_token(
+        data={"sub": user.email, "type": "reset"},
+        expires_delta=timedelta(minutes=15)
+    )
+
+    # 3. Cria o Link (No mundo real, seria o link do seu site)
+    # Aqui, vamos simular que o usuário clicaria num link que leva ao front
+    link_recuperacao = f"http://localhost:3000/Front-End/olhonopix.html#/resetar?token={reset_token}"
+
+    # 4. Monta o E-mail
+    html = f"""
+    <h3>Recuperação de Senha - De Olho no Pix</h3>
+    <p>Olá, {user.nome}!</p>
+    <p>Recebemos um pedido para redefinir sua senha.</p>
+    <p>Clique no link abaixo para criar uma nova senha:</p>
+    <a href="{link_recuperacao}">Redefinir Minha Senha</a>
+    <br>
+    <p>Este link expira em 15 minutos.</p>
+    """
+
+    message = MessageSchema(
+        subject="Redefinição de Senha",
+        recipients=[email_alvo],
+        body=html,
+        subtype=MessageType.html
+    )
+
+    # 5. Envia
+    fm = FastMail(conf)
+    await fm.send_message(message)
+
+    return {"message": "E-mail de recuperação enviado com sucesso."}
+
+@app.post("/api/reset-password")
+async def reset_password(
+    request: schemas.ResetRequest, 
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Recebe o token do e-mail e a nova senha para efetuar a troca.
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Token inválido ou expirado."
+    )
+
+    try:
+        # 1. Decodifica e Valida o Token
+        payload = jwt.decode(request.token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        
+        if email is None or token_type != "reset":
+            raise credentials_exception
+            
+    except JWTError:
+        raise credentials_exception
+
+    # 2. Busca o usuário
+    user = await crud.get_user_by_email(db, email=email)
+    if user is None:
+        raise credentials_exception
+
+    # 3. Atualiza a senha (reusamos a função de update do CRUD)
+    # Criamos um objeto de atualização apenas com a senha
+    update_data = schemas.UsuarioUpdate(senha=request.new_password)
+    await crud.update_user(db=db, user=user, updates=update_data)
+
+    return {"message": "Senha alterada com sucesso! Agora você pode fazer login."}
 
 # ==================================
 #       ROTAS DE PERFIL (NOVAS)

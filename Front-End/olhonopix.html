@@ -23,7 +23,7 @@
       --amber:#fbbf24;
       --danger:#dc2626;
       --focus:#2563eb;
-      --max:1400px;
+      --max:95%; /* Largura máxima aumentada */
       --shadow:none;
     }
 
@@ -55,40 +55,29 @@
       --text:#f5f7fb;
       --card:#141414;
       --border:#2a2a2a;
-      /* Paleta segura */
-      --brand-primary:#0ea5e9;       /* ciano vivo */
-      --brand-secondary:#f59e0b;     /* âmbar forte */
-      --brand-secondary-grad:#fbbf24;/* âmbar claro */
-      --brand-accent:#a78bfa;        /* roxo médio */
+      --brand-primary:#0ea5e9;
+      --brand-secondary:#f59e0b;
+      --brand-secondary-grad:#fbbf24;
+      --brand-accent:#a78bfa;
       --muted:#cbd5e1;
       --focus:#22d3ee;
-      --ok:#22d3ee;                  /* ciano */
-      --warn:#f59e0b;                /* âmbar */
-      --amber:#fde047;               /* amarelo claro */
-      --danger:#e11d48;              /* magenta/rose */
+      --ok:#22d3ee;
+      --warn:#f59e0b;
+      --amber:#fde047;
+      --danger:#e11d48;
     }
     body.daltonico header{ background:linear-gradient(90deg,#111827,#0a0a0a); border-bottom-color:#2a2a2a; }
     body.daltonico nav.topnav a:hover,
     body.daltonico nav.topnav a[aria-current="page"]{ background:#111827; border-color:#374151; }
     body.daltonico .btn-tool,
     body.daltonico #btn-dark,
-    body.daltonico #btn-contrast{
-      background:#141414;
-      color:#f5f7fb;
-      border:1px solid #374151;
-    }
-    body.daltonico .btn-tool:hover,
-    body.daltonico #btn-dark:hover,
-    body.daltonico #btn-contrast:hover{
-      filter:brightness(1.05);
-    }
+    body.daltonico #btn-contrast{ background:#141414; color:#f5f7fb; border:1px solid #374151; }
+    body.daltonico .btn-tool:hover, body.daltonico #btn-dark:hover, body.daltonico #btn-contrast:hover{ filter:brightness(1.05); }
     body.daltonico thead th{ background:#111827; color:#93c5fd; }
-    /* Correções de contraste dos botões no modo daltônico */
     body.daltonico .btn{ border-color:#374151; background:#141414; color:#f5f7fb; }
     body.daltonico .btn:hover{ filter:brightness(1.05); }
     body.daltonico .btn.ghost{ background:#141414; color:#f5f7fb; }
     body.daltonico .btn.primary{ background:linear-gradient(135deg, var(--brand-accent), #7c93ff); color:#0b0b0b; }
-    body.daltonico #btn-voltar-global{ background:#141414; color:#f5f7fb; border-color:#374151; }
 
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -114,31 +103,9 @@
     nav.topnav a{padding:10px 14px; border-radius:12px; border:1px solid transparent; font-weight:700}
     nav.topnav a[aria-current="page"], nav.topnav a:hover{background:#ffffff55; border-color:var(--border)}
 
-    /* Botões de ferramentas (somente texto) */
     .tools{display:flex; gap:10px; flex-wrap:wrap; margin-left:8px}
-    .btn-tool{
-      border:1px solid var(--border);
-      background:var(--card);
-      border-radius:12px;
-      padding:8px 12px;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      font-size:14px;
-      font-weight:600
-    }
+    .btn-tool{ border:1px solid var(--border); background:var(--card); border-radius:12px; padding:8px 12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:600 }
     .btn-tool:hover{background:#f1f5f9}
-
-    /* Botão Voltar global (fixo) */
-    #btn-voltar-global{
-      position:fixed; top:86px; left:16px; z-index:999;
-      border:1px solid var(--border);
-      background:var(--card);
-      border-radius:12px; padding:8px 12px; cursor:pointer;
-      display:inline-flex; align-items:center; gap:6px; font-weight:700
-    }
-    #btn-voltar-global:hover{ filter:brightness(.97) }
 
     .container{max-width:var(--max); margin:0 auto; padding:36px 24px}
     main{min-height:60vh}
@@ -148,28 +115,139 @@
     .muted{color:var(--muted)}
 
     .badge{display:inline-block; padding:.25rem .5rem; border-radius:999px; font-size:12px; border:1px solid var(--border)}
-
-    /* asterisco obrigatório — sem espaço antes do * */
-    .req{ color:#dc2626; font-weight:700; margin-left:0 }
+    .req{ color:#dc2626; font-weight:700; margin-left:2px }
 
     .grid{display:grid; gap:20px}
     .grid.two{grid-template-columns:repeat(2,1fr)}
     .grid.responsive{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
 
-    form{display:grid; gap:14px}
-    label{display:grid; gap:6px; font-size:14px}
-    .hint{font-size:12px; color:var(--muted)}
-    input,select,textarea{padding:12px 14px; border:1px solid var(--border); border-radius:14px; background:var(--card); font:inherit; color:inherit}
-    input:focus,select:focus,textarea:focus{outline:3px solid var(--focus); outline-offset:2px}
+    /* --- COLE ISTO NO LUGAR DO SEU CSS DE INPUTS ATUAL --- */
 
-    /* estados de erro */
-    .field-error{ border-color:#dc2626 !important }
-    .error{display:none; color:#b91c1c; font-size:12px}
-    .error.show{ display:block }
+    /* Container do formulário */
+    form {
+        display: grid;
+        gap: 32px; /* Espaço vertical entre os campos */
+        width: 100%;
+    }
 
-    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    /* Linhas com duas colunas */
+    .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px; /* Espaço horizontal */
+    }
 
-    .actions{display:flex; gap:10px; flex-wrap:wrap}
+    /* Configuração dos Campos (Grandes e Largos) */
+    input, select {
+        display: block;           /* Comporta-se como bloco */
+        width: 400px;              /* OBRIGATÓRIO: Preenche a largura do pai */
+        box-sizing: border-box;   /* Garante que padding não estoure */
+        padding: 12px 18px;       /* Altura interna maior */
+        font-size: 16px;          /* Letra maior */
+        min-height: 20px;         /* Altura mínima fixa */
+        line-height: 1.5;        /* Espaçamento entre linhas */
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        color: var(--text);
+        font-family: inherit;
+        resize: vertical;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    /* Remove borda azul feia e põe sombra suave */
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--focus);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    textarea {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        
+        /* --- TAMANHO FIXO E GRANDE --- */
+        height: 180px;            /* Altura fixa bem grande (ajuste como quiser) */
+        padding: 20px;            /* Espaço interno em todos os lados */
+        line-height: 1.5;         /* Espaçamento entre linhas de texto */
+        font-size: 16px;
+        /* ----------------------------- */
+
+        /* Visual */
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        color: var(--text);
+        font-family: inherit;
+        
+        /* Comportamento de redimensionamento */
+        resize: none;             /* TRAVA TOTALMENTE (não deixa o usuário mudar o tamanho) */
+        /* OU use: resize: vertical; (se quiser deixar o usuário aumentar pra baixo) */
+        
+        transition: border-color .2s, box-shadow .2s;
+    }
+    
+    /* Foco (para ficar azul quando clica) */
+    textarea:focus {
+        outline: none;
+        border-color: var(--focus);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+    
+    /* Estado Desabilitado */
+    input:disabled {
+        background: #f1f5f9;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    body.dark input:disabled { background: #334155; }
+
+    /* Labels (Posição relativa para o erro flutuar nela) */
+    label {
+        display: flex; 
+        flex-direction: column; 
+        gap: 8px;
+        font-weight: 600; 
+        font-size: 14px;
+        position: relative; /* OBRIGATÓRIO para o erro flutuar */
+        margin-bottom: 0;
+    }
+
+    /* MENSAGEM DE ERRO FLUTUANTE */
+    .error {
+        display: none;
+        color: #dc2626;
+        font-size: 12px; 
+        font-weight: 500;
+        
+        /* A Mágica: Flutua "por cima" sem empurrar nada */
+        position: absolute; 
+        bottom: -22px; /* Fica 22px abaixo do label (embaixo do input) */
+        left: 4px;
+        white-space: nowrap; 
+        z-index: 10;
+        pointer-events: none;
+    }
+    
+    .error.show { 
+        display: block; 
+        animation: fadeIn .2s ease-out; 
+    }
+    
+    /* Borda vermelha no campo */
+    .field-error { 
+        border-color: #dc2626 !important; 
+        background-color: rgba(220,38,38,0.02) !important; 
+    }
+
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+    
+    /* Ajuste para Mobile */
+    @media (max-width: 768px) {
+        .row { grid-template-columns: 1fr; } /* Vira uma coluna só no celular */
+    }
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
     .btn{border:1px solid var(--border); background:var(--card); border-radius:14px; padding:12px 16px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-weight:700; transition:filter .2s}
     .btn.primary{background:linear-gradient(135deg, var(--brand-accent), #60a5fa); color:#fff; border-color:transparent}
     .btn.primary:hover{filter:brightness(0.95)}
@@ -197,8 +275,8 @@
 
     /* Tabela */
     table{width:100%; border-collapse:separate; border-spacing:0; background:var(--card); border-radius:16px; overflow:hidden}
-    th,td{padding:12px 14px; border-bottom:1px solid var(--border); text-align:left; font-size:14px}
-    thead th{background:#eef6ff; color:#0b3b7a}
+    th,td{padding:16px; text-align:left; border-bottom:1px solid var(--border); font-size:14px}
+    thead th{background:#eef6ff; color:#0b3b7a; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; font-size:12px}
     tr:last-child td{border-bottom:none}
     tr.risk-5 td:first-child{box-shadow:inset 4px 0 0 var(--warn)}
     tr.risk-10 td:first-child{box-shadow:inset 4px 0 0 var(--amber)}
@@ -218,7 +296,7 @@
     .legend{ display:flex; gap:10px; flex-wrap:wrap; margin:16px 0 }
 
     @media (max-width: 1024px){ .grid.two{grid-template-columns:1fr} }
-    @media (max-width: 900px){ .row{grid-template-columns:1fr} #btn-voltar-global{ top:72px; } }
+    @media (max-width: 900px){ .row{grid-template-columns:1fr} }
     @media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto} }
   </style>
 </head>
@@ -250,7 +328,6 @@
 
     <div class="container">
       <main id="main" role="main" class="grid" style="gap:24px">
-        <!-- ENTRAR -->
         <section id="inicio" class="page card active" aria-labelledby="h-inicio">
           <h1 id="h-inicio">Entrar</h1>
           <form id="form-login" aria-describedby="d-inicio" style="max-width:800px; margin:0 auto" novalidate>
@@ -273,7 +350,6 @@
           </form>
         </section>
 
-        <!-- CADASTRAR-SE -->
         <section id="cadastro" class="page card" aria-labelledby="h-cadastro">
           <h1 id="h-cadastro">Cadastrar-se</h1>
           <p class="muted">Leva menos de dois minutos. Campos com <span class="req">*</span> são obrigatórios.</p>
@@ -314,7 +390,6 @@
           </form>
         </section>
 
-        <!-- HUB (INÍCIO) -->
         <section id="hub" class="page card" aria-labelledby="h-hub">
           <h1 id="h-hub">Selecione uma opção:</h1>
           <p class="muted">Escolha a opção desejada abaixo.</p>
@@ -330,99 +405,98 @@
           </div>
         </section>
 
-        <!-- DENUNCIAR -->
         <section id="denunciar" class="page card" aria-labelledby="h-denunciar">
           <h1 id="h-denunciar">Realizar uma denúncia</h1>
           <p class="muted">Insira os dados da conta utilizada pelo golpista</p>
-          <form id="form-denuncia" style="max-width:1100px; margin:0 auto" novalidate>
+          
+          <form id="form-denuncia" style="max-width:100%; margin:0 auto" novalidate>
+            
             <div class="row">
               <label>
                 <span>Tipo de chave Pix<span class="req">*</span></span>
-                <select id="tipo" required aria-invalid="false">
-                  <option value="">Selecione…</option>
-                  <option>E-mail</option>
-                  <option>Telefone</option>
+                <select id="tipo" required>
+                  <option value="">Selecione...</option>
                   <option>CPF</option>
                   <option>CNPJ</option>
+                  <option>Telefone</option>
+                  <option>E-mail</option>
                   <option>Chave aleatória</option>
                 </select>
-                <small class="error" aria-live="polite">Escolha um tipo de chave.</small>
+                <small class="error">Selecione um tipo.</small>
               </label>
               <label>
-                <span>Nome da conta<span class="req">*</span></span>
-                <input id="nome" type="text" required placeholder="Nome como aparece no banco" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe o nome da conta.</small>
+                <span>Nome do Titular<span class="req">*</span></span>
+                <input id="nome" type="text" required placeholder="Nome como aparece no banco" />
+                <small class="error">Informe o nome da conta.</small>
               </label>
             </div>
             
             <div class="row">
               <label>
                 <span>Chave Pix<span class="req">*</span></span>
-                <input id="chave_pix" type="text" required placeholder="Digite a chave pix (email, tel, cpf, etc)" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe a chave pix denunciada.</small>
+                <input id="chave_pix" type="text" required disabled placeholder="Selecione o tipo primeiro" autocomplete="off" />
+                <small id="err-chave" class="error">Chave inválida.</small>
               </label>
               <label>
-                <span>CPF/CNPJ (parcial)<span class="req">*</span></span>
-                <input id="docparcial" type="text" required inputmode="numeric" placeholder="***.123.***-** / **.***.***/0001-**" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe o CPF/CNPJ (mesmo que parcial).</small>
+                <span>CPF/CNPJ Parcial<span class="req">*</span></span>
+                <input id="docparcial" type="text" required placeholder="***.123.456-**" />
+                <small class="error">Documento obrigatório.</small>
               </label>
             </div>
 
             <div class="row">
               <label>
                 <span>Agência</span>
-                <input id="ag" type="text" inputmode="numeric" placeholder="0001" aria-invalid="false" />
+                <input id="ag" type="text" placeholder="0000" />
               </label>
               <label>
                 <span>Conta</span>
-                <input id="cc" type="text" inputmode="numeric" placeholder="123456-7" aria-invalid="false" />
+                <input id="cc" type="text" placeholder="12345-6" />
               </label>
             </div>
-
-            <label>
-              <span>Valor</span>
-              <input id="valor" type="text" inputmode="decimal" placeholder="Ex.: 350,00" />
-              <small class="hint">Informe o valor aproximado da transação (opcional).</small>
-            </label>
 
             <div class="row">
               <label>
                 <span>Banco<span class="req">*</span></span>
-                <input id="banco" type="text" required placeholder="Ex.: Banco X" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe o banco.</small>
+                <input id="banco" type="text" required placeholder="Ex: Nubank, Itaú..." />
+                <small class="error">Informe o banco.</small>
               </label>
               <label>
-                <span>Número do BO<span class="req">*</span></span>
-                <input id="bo" type="text" required placeholder="2025-000000" aria-invalid="false" />
-                <small class="error" aria-live="polite">Informe o número do B.O.</small>
+                <span>Número do B.O.<span class="req">*</span></span>
+                <input id="bo" type="text" required placeholder="2025..." />
+                <small class="error">B.O. obrigatório.</small>
               </label>
             </div>
             
-            <label>
-              <span>Anexar B.O<span class="req">*</span></span>
-              <input id="bo-file" type="file" accept=".pdf,.jpg,.jpeg,.png" required aria-invalid="false" />
-              <small class="error" aria-live="polite">Anexe o B.O (PDF/JPG/PNG).</small>
-            </label>
-            
-            <label>
-              <span>Descrição</span>
-              <textarea id="desc" rows="3" placeholder="Conte, com serenidade, o que aconteceu"></textarea>
-            </label>
-            
-            <div class="actions" style="justify-content:center">
-              <button class="btn primary" type="submit">Confirmar denúncia</button>
+            <div class="row">
+              <label>
+                <span>Valor do Golpe (R$)</span>
+                <input id="valor" type="text" placeholder="0,00" />
+              </label>
+
+              <label>
+                <span>Comprovante / B.O. (PDF/Img)<span class="req">*</span></span>
+                <input id="bo-file" type="file" accept=".pdf,.jpg,.jpeg,.png" required style="padding:12px; height:auto;" />
+                <small class="error">Anexo obrigatório.</small>
+              </label>
             </div>
-            <p id="flash" class="sr-only" aria-live="polite"></p>
+
+            <label>
+              <span>Relato do ocorrido</span>
+              <textarea id="desc" rows="6" placeholder="Descreva o que aconteceu..."></textarea>
+            </label>
+
+            <div class="actions" style="justify-content:center">
+              <button class="btn primary" type="submit">Confirmar Denúncia</button>
+            </div>
           </form>        
         </section>
 
-        <!-- PESQUISAR -->
         <section id="pesquisar" class="page card" aria-labelledby="h-pesquisar">
           <h1 id="h-pesquisar">Pesquisar denúncias</h1>
 
           <div class="search-wrap">
             <div class="search-controls">
-              <!-- Filtro por Tipo de chave Pix -->
               <label style="max-width:420px">
                 <span>Tipo de chave Pix</span>
                 <select id="filtro-tipo">
@@ -470,7 +544,6 @@
           </div>
         </section>
 
-        <!-- FAQ -->
         <section id="faq" class="page card" aria-labelledby="h-faq">
           <h1 id="h-faq">FAQ</h1>
           <div class="grid" style="max-width:980px; margin:0 auto">
@@ -493,22 +566,40 @@
           </div>
         </section>
 
-        <!-- Recuperar senha (mock) -->
-        <section id="recuperar" class="page card" aria-labelledby="h-recuperar">
+        <section id="recuperar" class="page card">
           <h1 id="h-recuperar">Recuperar senha</h1>
-          <form style="max-width:560px; margin:0 auto" novalidate>
+          <form id="form-recuperar" style="max-width:560px; margin:0 auto" novalidate>
             <label>
               <span>E-mail cadastrado<span class="req">*</span></span>
-              <input type="email" required placeholder="voce@exemplo.com" aria-invalid="false" />
+              <input id="recov-email" type="email" required placeholder="voce@exemplo.com" aria-invalid="false" />
               <small class="error">Informe um e-mail válido.</small>
             </label>
             <div class="actions" style="justify-content:center">
-              <a class="btn primary" data-route href="#/inicio">Enviar link</a>
+              <button class="btn primary" type="submit">Enviar link</button>
+              <button class="btn ghost" type="button" onclick="window.location.hash='#/inicio'">Voltar</button>
             </div>
           </form>
         </section>
 
-        <!-- PERFIL (somente após login) -->
+        <section id="resetar" class="page card">
+          <h1>Criar Nova Senha</h1>
+          <form id="form-resetar" style="max-width:500px; margin:0 auto" novalidate>
+            <label>
+              <span>Nova Senha<span class="req">*</span></span>
+              <input id="reset-pass" type="password" required minlength="6" placeholder="Mínimo 6 caracteres" />
+              <small class="error">Mínimo 6 caracteres.</small>
+            </label>
+            <label>
+              <span>Confirmar Senha<span class="req">*</span></span>
+              <input id="reset-confirm" type="password" required placeholder="Repita a senha" />
+              <small class="error">As senhas não coincidem.</small>
+            </label>
+            <div class="actions" style="justify-content:center">
+              <button class="btn primary" type="submit">Alterar Senha</button>
+            </div>
+          </form>
+        </section>
+
         <section id="perfil" class="page card" aria-labelledby="h-perfil">
           <h1 id="h-perfil">Meu perfil</h1>
           <p class="muted">Atualize seus dados. Campos com <span class="req">*</span> são obrigatórios.</p>
@@ -554,19 +645,20 @@
     </footer>
   </div>
 
-  <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">Tudo certo.</div>
 
   <script>
     /**********************
      * CONFIG E HELPERS   *
      **********************/
-    const API_BASE = 'http://localhost:8000/api'; // ⇦ ajuste aqui se precisar
+    const API_BASE = 'http://localhost:8000/api';
 
-    // Preferências de tema
+    // Preferências de tema e elementos globais
     const body = document.body;
     const btnDark = document.getElementById('btn-dark');
     const btnContrast = document.getElementById('btn-contrast');
+    
+    // Elementos do Perfil (Globais)
     const formPerfil = document.getElementById('form-perfil');
     const btnSalvarPerfil = document.getElementById('btn-salvar-perfil');
     const btnEditarPerfil = document.getElementById('btn-editar-perfil');
@@ -606,29 +698,79 @@
       el.value = `${intFmt},${cents}`;
     }
 
-    // Máscaras
-    function maskCPF(el){ let v = onlyDigits(el.value).slice(0,11); let out=''; if(v.length>9){ out = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, (m,a,b,c,d)=> `${a}.${b}.${c}${d?'-'+d:''}`); } else if(v.length>6){ out = v.replace(/(\d{3})(\d{3})(\d{0,3})/, (m,a,b,c)=> `${a}.${b}.${c}`); } else if(v.length>3){ out = v.replace(/(\d{3})(\d{0,3})/, (m,a,b)=> `${a}.${b}`); } else { out = v; } el.value = out; el.setAttribute('aria-invalid', v.length===11 ? 'false' : 'true'); }
-    function maskTEL(el){ let v = onlyDigits(el.value).slice(0,11); if(v.length>10){ el.value = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3'); } else if(v.length>6){ el.value = v.replace(/(\d{2})(\d{0,5})(\d{0,4})/, (m,a,b,c)=>`(${a}) ${b}${c?'-'+c:''}`); } else if(v.length>2){ el.value = v.replace(/(\d{2})(\d{0,5})/, (m,a,b)=>`(${a}) ${b}`); } else { el.value = v; } el.setAttribute('aria-invalid', v.length===11 ? 'false' : 'true'); }
-    function maskAG(el){ let v = onlyDigits(el.value).slice(0,4); el.value = v; el.setAttribute('aria-invalid', v.length>0 ? 'false' : 'true'); }
-    function maskCC(el){ let v = onlyDigits(el.value).slice(0,12); if(v.length>1){ el.value = v.replace(/(\d{1,11})(\d{0,1})/, (m,a,b)=> b?`${a}-${b}`:a ); } else { el.value = v; } el.setAttribute('aria-invalid', v.length>0 ? 'false' : 'true'); }
+    // --- NOVAS MÁSCARAS ---
+    function maskCPF(v){ 
+      v = v.replace(/\D/g,""); 
+      v = v.slice(0,11);
+      return v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+              .replace(/^(\d{3})(\d{3})(\d{3})/, "$1.$2.$3")
+              .replace(/^(\d{3})(\d{3})/, "$1.$2");
+    }
 
+    function maskCNPJ(v){
+      v = v.replace(/\D/g,""); 
+      v = v.slice(0,14);
+      return v.replace(/^(\d{2})(\d)/, "$1.$2")
+              .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+              .replace(/\.(\d{3})(\d)/, ".$1/$2")
+              .replace(/(\d{4})(\d)/, "$1-$2");
+    }
+
+    function maskTEL(v){
+      v = v.replace(/\D/g,""); 
+      v = v.slice(0,11);
+      if(v.length > 10) {
+        return v.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+      } else if (v.length > 6) {
+        return v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+      } else if (v.length > 2) {
+        return v.replace(/^(\d{2})(\d{0,5}).*/, "($1) $2");
+      }
+      return v;
+    }
+    
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // --- APLICAÇÃO DE MÁSCARAS E RESTRIÇÕES ---
     const cpf = document.getElementById('cpf');
     const tel = document.getElementById('tel');
     const ag  = document.getElementById('ag');
     const cc  = document.getElementById('cc');
     const valor = document.getElementById('valor');
-    if(cpf){ cpf.addEventListener('input', ()=>maskCPF(cpf)); }
-    if(tel){ tel.addEventListener('input', ()=>maskTEL(tel)); }
-    if(ag){  ag.addEventListener('input', ()=>maskAG(ag)); }
-    if(cc){  cc.addEventListener('input', ()=>maskCC(cc)); }
+    const inputNome = document.getElementById('nome');
+    const inputDocParcial = document.getElementById('docparcial');
+    
+    if(cpf){ cpf.addEventListener('input', (e)=>{ e.target.value = maskCPF(e.target.value); }); }
+    if(tel){ tel.addEventListener('input', (e)=>{ e.target.value = maskTEL(e.target.value); }); }
     if(valor){ valor.addEventListener('input', ()=>maskMoney(valor)); }
+
+    // CORREÇÃO: Agência e Conta (Permite números, traço e barra)
+    function validarAgenciaConta(e) {
+       // Substitui tudo que NÃO for número (0-9), traço (-) ou barra (/) por vazio
+       e.target.value = e.target.value.replace(/[^0-9\-\/]/g, '');
+    }
+    if(ag) ag.addEventListener('input', validarAgenciaConta);
+    if(cc) cc.addEventListener('input', validarAgenciaConta);
+
+    // NOME: Remove números
+    if(inputNome) {
+      inputNome.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[0-9]/g, '');
+      });
+    }
+
+    // CPF/CNPJ (parcial): Remove letras
+    if(inputDocParcial) {
+      inputDocParcial.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[a-zA-Z]/g, '');
+      });
+    }
 
     // Toast helper
     const toast = document.getElementById('toast');
     function showToast(msg, type='success'){ if(!toast) return; toast.textContent = msg; toast.classList.remove('error','success'); toast.classList.add(type==='error'?'error':'success'); toast.classList.add('show'); setTimeout(()=> toast.classList.remove('show'), 3000); }
-
-    // Estado em memória para pesquisa/sugestões (resultado mais recente da API)
-    let lastResults = [];
 
     // Autorização
     function authHeaders(extra={}){
@@ -640,22 +782,193 @@
       };
     }
 
+    // --- FUNÇÃO DE LOGOUT DE EMERGÊNCIA ---
+    function forceLogout() {
+      localStorage.removeItem('pix-token');
+      window.location.hash = '#/inicio';
+      showToast('Sua sessão expirou. Entre novamente.', 'error');
+    }
+
+    /*****************************
+     * LÓGICA DA CHAVE PIX       *
+     *****************************/
+    const selectTipo = document.getElementById('tipo');
+    const inputChave = document.getElementById('chave_pix');
+    const errChave = document.getElementById('err-chave');
+
+    function validarChavePix() {
+        if (!selectTipo || !inputChave) return false;
+        
+        const tipo = selectTipo.value;
+        let valor = inputChave.value;
+        let valido = true;
+        let msg = '';
+
+        if (tipo === 'Telefone') {
+            inputChave.value = maskTEL(valor);
+            if (onlyDigits(inputChave.value).length < 10) {
+                valido = false; msg = 'Telefone incompleto.';
+            }
+        } else if (tipo === 'CPF') {
+            inputChave.value = maskCPF(valor);
+            if (onlyDigits(inputChave.value).length < 11) {
+                valido = false; msg = 'CPF incompleto.';
+            }
+        } else if (tipo === 'CNPJ') {
+            inputChave.value = maskCNPJ(valor);
+            if (onlyDigits(inputChave.value).length < 14) {
+                valido = false; msg = 'CNPJ incompleto.';
+            }
+        } else if (tipo === 'E-mail') {
+            if (!validateEmail(valor)) {
+                valido = false; msg = 'E-mail inválido.';
+            }
+        } else if (tipo === 'Chave aleatória') {
+             if (valor.length < 5) {
+                valido = false; msg = 'Chave muito curta.';
+             }
+        }
+
+        // Exibir erro
+        if (!valido && valor.length > 0) {
+            inputChave.classList.add('field-error');
+            inputChave.setAttribute('aria-invalid', 'true');
+            if (errChave) {
+                errChave.textContent = msg;
+                errChave.classList.add('show');
+            }
+        } else {
+            inputChave.classList.remove('field-error');
+            inputChave.setAttribute('aria-invalid', 'false');
+            if (errChave) errChave.classList.remove('show');
+            if (valor.length === 0) valido = false; 
+        }
+        return valido;
+    }
+
+    if (selectTipo && inputChave) {
+        selectTipo.addEventListener('change', () => {
+            inputChave.value = '';
+            inputChave.disabled = false;
+            inputChave.classList.remove('field-error');
+            if(errChave) errChave.classList.remove('show');
+
+            const tipo = selectTipo.value;
+            // Define teclado no celular
+            if (['Telefone', 'CPF', 'CNPJ'].includes(tipo)) {
+                inputChave.setAttribute('inputmode', 'numeric');
+            } else if (tipo === 'E-mail') {
+                inputChave.setAttribute('inputmode', 'email');
+            } else {
+                inputChave.setAttribute('inputmode', 'text');
+            }
+
+            if(tipo === 'Telefone') inputChave.placeholder = '(11) 99999-9999';
+            else if(tipo === 'CPF') inputChave.placeholder = '000.000.000-00';
+            else if(tipo === 'CNPJ') inputChave.placeholder = '00.000.000/0000-00';
+            else if(tipo === 'E-mail') inputChave.placeholder = 'exemplo@email.com';
+            else if(tipo === 'Chave aleatória') inputChave.placeholder = 'Cole a chave aqui';
+            else { inputChave.disabled = true; inputChave.placeholder = 'Selecione o tipo primeiro'; }
+        });
+
+        inputChave.addEventListener('input', validarChavePix);
+    }
+
     /**********************
-     * ROTEAMENTO & NAV   *
+     * DENÚNCIA (POST)    *
      **********************/
-    const routes = ["inicio","cadastro","hub","denunciar","pesquisar","faq","recuperar","perfil"];
+    const formDen = document.getElementById('form-denuncia');
+    formDen?.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      
+      if (selectTipo.value && !validarChavePix()) {
+         showToast('Corrija a Chave Pix antes de enviar.', 'error');
+         inputChave.focus();
+         return;
+      }
+
+      const tipo = document.getElementById('tipo');
+      const nome = document.getElementById('nome');
+      const docp = document.getElementById('docparcial'); 
+      const banco= document.getElementById('banco');     
+      const bo = document.getElementById('bo');         
+      const boFile = document.getElementById('bo-file');
+      
+      const agi  = document.getElementById('ag');
+      const cci  = document.getElementById('cc');
+      const val  = document.getElementById('valor');
+      const desc = document.getElementById('desc');
+
+      const required = [tipo, nome, inputChave, docp, banco, bo, boFile];
+      let ok = true;
+      required.forEach(el=>{
+        if (!el) return; 
+        const valid = (el.type==='file') ? (el.files && el.files.length>0) : !!el.value;
+        if(!valid){ 
+          el.classList.add('field-error'); 
+          el.setAttribute('aria-invalid','true'); 
+          ok=false; 
+        } else { 
+          el.classList.remove('field-error'); 
+          el.setAttribute('aria-invalid','false'); 
+        }
+      });
+
+      if(!ok){ showToast('Preencha os campos obrigatórios.', 'error'); return; }
+
+      const fd = new FormData();
+      fd.append('anexo', boFile.files[0]);
+      fd.append('tipo_chave_pix', tipo.value);
+      fd.append('nome_conta', nome.value);
+      fd.append('chave_pix', inputChave.value);
+      fd.append('numero_bo', bo.value);
+      fd.append('cpf_cnpj', docp.value);
+      fd.append('banco', banco.value);
+
+      if(agi && agi.value) fd.append('agencia', agi.value);
+      if(cci && cci.value) fd.append('conta', cci.value);
+      if(desc && desc.value) fd.append('descricao', desc.value);
+      if(val && val.value) fd.append('valor', val.value);
+
+      try{
+        showToast('Enviando denúncia...', 'success');
+        const resp = await fetch(`${API_BASE}/denuncias`, {
+          method: 'POST',
+          headers: authHeaders(),
+          body: fd
+        });
+        
+        if(resp.status === 401) { forceLogout(); return; }
+
+        const data = await resp.json().catch(()=>({}));
+        if(!resp.ok){ throw new Error(data.detail || 'Erro desconhecido no servidor'); }
+        showToast('Denúncia registrada com sucesso!', 'success');
+        formDen.reset();
+        inputChave.disabled = true; 
+        inputChave.placeholder = 'Selecione o tipo primeiro';
+        
+        window.location.hash = '#/pesquisar';
+        await doSearch();
+      }catch(err){
+        console.error('Falha ao enviar denúncia:', err);
+        showToast(`Erro: ${err.message}`, 'error');
+      }
+    });
+
+    /**********************
+     * ROTEAMENTO E NAV   *
+     **********************/
     function setActive(slug){
+      const routes = ["inicio","cadastro","hub","denunciar","pesquisar","faq","recuperar","perfil","resetar"];
       routes.forEach(id=>{
         const el = document.getElementById(id);
         if(!el) return;
         el.classList.toggle('active', id===slug);
       });
-      // aria-current
       document.querySelectorAll('[data-route]').forEach(a=>{
         const dest = (a.getAttribute('href')||'').replace(/^#\//,'');
         a.setAttribute('aria-current', dest===slug ? 'page' : 'false');
       });
-      // Topnav condicionada a login
       const nav = document.querySelector('.topnav');
       const navPerfil = document.getElementById('nav-perfil');
       const logged = !!localStorage.getItem('pix-token');
@@ -678,59 +991,87 @@
         }
       }
     }
+    const routes = ["inicio","cadastro","hub","denunciar","pesquisar","faq","recuperar","perfil","resetar"];
+
+    // 2. Função para pegar a página atual (Ignora o ?token=...)
     function currentSlug(){
       const h = window.location.hash || '#/inicio';
-      const slug = h.replace(/^#\//,'');
-      return routes.includes(slug)? slug : 'inicio';
+      // Pega apenas a parte antes do '?' e remove o '#/'
+      const slug = h.replace(/^#\//,'').split('?')[0];
+      // Se a rota não existir, volta para inicio
+      return routes.includes(slug) ? slug : 'inicio';
     }
-    function onRoute(){ 
-      const slug = currentSlug();
-      setActive(slug); 
-      toggleBack(); 
-        
-      // Se o usuário está indo para o perfil, carrega os dados
-      if (slug === 'perfil') {
-        loadProfile();
-      }
-    }
-    window.addEventListener('hashchange', onRoute);
 
-    // Botão Voltar global
-    const btnVoltarGlobal = document.getElementById('btn-voltar-global');
-    function toggleBack(){ btnVoltarGlobal.style.display = (currentSlug()==='inicio') ? 'none' : 'inline-flex'; }
-    btnVoltarGlobal?.addEventListener('click', ()=>{
-      if(window.history.length > 1) window.history.back();
-      else window.location.hash = '#/hub';
-    });
+    // 3. Função Principal de Roteamento
+    function onRoute(){
+       const slug = currentSlug(); // Agora usamos 'slug', não 'hash'
+       const logged = !!localStorage.getItem('pix-token');
+       
+       // Lista de páginas públicas (incluindo a nova 'resetar')
+       const publicas = ['inicio','cadastro','recuperar','resetar'];
+       
+       // Lógica de Segurança:
+       // Se logado tenta ir pra pública -> manda pro hub
+       if(logged && publicas.includes(slug)) { 
+           window.location.hash = '#/hub'; 
+           return; 
+       }
+       
+       // Se deslogado tenta ir pra privada -> manda pra login
+       if(!logged && !publicas.includes(slug)) { 
+           window.location.hash = '#/inicio'; 
+           return; 
+       }
+
+       // Atualiza a UI (Esconde/Mostra seções)
+       document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+       const target = document.getElementById(slug);
+       if(target) target.classList.add('active');
+       
+       // Atualiza links de navegação
+       document.querySelectorAll('nav a').forEach(a => {
+          // Removemos o ?token da comparação visual também
+          const hrefSlug = (a.getAttribute('href') || '').replace('#/','');
+          if(hrefSlug === slug) a.style.color = 'var(--brand-accent)';
+          else a.style.color = 'var(--muted)';
+       });
+
+       // Controle do menu Perfil
+       const navPerfil = document.getElementById('nav-perfil');
+       if(navPerfil) navPerfil.style.display = logged ? 'inline-block' : 'none';
+
+       // Carrega dados específicos da página
+       if(slug === 'perfil') loadProfile();
+       if(slug === 'pesquisar') doSearch();
+    }
+
+    window.addEventListener('hashchange', onRoute);
 
     /**********************
      * RENDER PESQUISA    *
      **********************/
+    let lastResults = [];
+
     function renderTable(rows){
       const tbody = document.getElementById('tbody'); if(!tbody) return; tbody.innerHTML = '';
       if(!rows || !rows.length){
-        // MUDANÇA 1: Colspan atualizado para 5 colunas
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma denúncia encontrada.</td></tr>';
         return;
       }
       rows.forEach(r => {
-        // Mapeia os dados da API (schemas.DenunciaAgrupada)
         const nome = r.nome_conta || '—';
         const doc  = r.cpf_cnpj || '—';
         const banco= r.banco || '—';
         const chave = (r.chave_pix_exemplo || '—').replace(/\n/g, '<br>');
         const denunciasNum = Number(r.total_denuncias || 0);
-
-        // Lógica de Risco (agora funciona!)
-        let riskClass = '';
-        if(denunciasNum >= 15) riskClass = 'risk-15'; // Era 10 no HTML, mas 15 é mais impactante
-        else if(denunciasNum >= 10) riskClass = 'risk-10'; // Era 5
-        else if(denunciasNum >= 5) riskClass = 'risk-5'; // Era 2
-
+        
+        let riskClass = 'risk-5';
+        if(denunciasNum >= 15) riskClass = 'risk-15'; 
+        else if(denunciasNum >= 10) riskClass = 'risk-10'; 
+        else if(denunciasNum >= 5) riskClass = 'risk-5'; 
+        
         const tr = document.createElement('tr');
         tr.className = riskClass;
-
-        // MUDANÇA 2: Renderiza as 5 colunas agrupadas
         tr.innerHTML = `
           <td>${nome}</td>
           <td>${doc}</td>
@@ -759,7 +1100,7 @@
       }
       const pool = new Set();
       lastResults.forEach(r=>{
-        ['tipo','tipo_chave_pix','nome','nome_conta','banco','numero_bo','cpf_cnpj','doc','ag','cc'].forEach(k=>{
+        ['nome_conta', 'banco', 'cpf_cnpj', 'chave_pix_exemplo'].forEach(k=>{
           const v = String(r[k]||'');
           if(v.toLowerCase().includes(t)) pool.add(v);
         });
@@ -785,6 +1126,9 @@
         if(term) url.searchParams.append('q', term);
         if(tipoSel) url.searchParams.append('tipo', tipoSel);
         const resp = await fetch(url, { headers: authHeaders() });
+        
+        if(resp.status === 401) { forceLogout(); return; }
+
         if(!resp.ok){ throw new Error('Falha ao buscar denúncias'); }
         const data = await resp.json();
         lastResults = Array.isArray(data) ? data : [];
@@ -814,29 +1158,63 @@
     /**********************
      * LOGIN / LOGOUT     *
      **********************/
-    // NOVA FUNÇÃO: Carrega os dados do /api/me e preenche o form
     async function loadProfile() {
       try {
         const resp = await fetch(`${API_BASE}/me`, { headers: authHeaders() });
+        
+        if(resp.status === 401) { forceLogout(); return; }
+
         if (!resp.ok) throw new Error('Falha ao carregar perfil');
-        const user = await resp.json(); // Este é o schemas.Usuario
+        const user = await resp.json(); 
         
         profNome.value = user.nome || '';
         profEmail.value = user.email || '';
         profTel.value = user.telefone || '';
-        
-        // Aplica a máscara no telefone carregado (importante)
-        if (profTel.value) maskTEL(profTel); 
+        if (profTel.value) profTel.value = maskTEL(profTel.value);
 
-        toggleEditProfile(false); // Garante que está em modo de visualização
+        toggleEditProfile(false); 
       } catch (err) {
         console.error(err);
         showToast(err.message, 'error');
-        window.location.hash = '#/hub'; // Nos chuta se falhar
+        window.location.hash = '#/hub'; 
       }
     }
 
-    // NOVA FUNÇÃO: Alterna entre os modos de "ver" e "editar"
+    // 5. Recuperar Senha (NOVO)
+    document.getElementById('form-recuperar')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const emailInput = document.getElementById('recov-email');
+      
+      if(!emailInput.value || !emailInput.checkValidity()){
+         showToast('Digite um e-mail válido.', 'error');
+         return;
+      }
+
+      try {
+        showToast('Enviando e-mail...', 'success'); // Feedback imediato
+        
+        const resp = await fetch(`${API_BASE}/password-recovery`, {
+           method: 'POST', 
+           headers: {'Content-Type':'application/json'},
+           body: JSON.stringify({ email: [emailInput.value] }) // A lib espera uma lista
+        });
+        
+        const data = await resp.json();
+        
+        if(!resp.ok) throw new Error(data.detail || 'Erro ao enviar e-mail');
+        
+        showToast('Verifique sua caixa de entrada!', 'success');
+        emailInput.value = ''; // Limpa o campo
+        
+        // Opcional: Voltar para o login após alguns segundos
+        setTimeout(() => window.location.hash = '#/inicio', 3000);
+
+      } catch(err) { 
+        console.error(err);
+        showToast('Erro ao tentar recuperar senha.', 'error'); 
+      }
+    });
+
     function toggleEditProfile(isEditing) {
       profNome.disabled = !isEditing;
       profEmail.disabled = !isEditing;
@@ -848,16 +1226,14 @@
       btnEditarPerfil.style.display = isEditing ? 'none' : 'inline-flex';
       
       if (isEditing) {
-        profNome.focus(); // Foca no primeiro campo
+        profNome.focus(); 
       } else {
-        profPass.value = ''; // Limpa o campo de senha ao salvar ou cancelar
+        profPass.value = ''; 
       }
     }
-
-// Listeners para os botões de Edição
+    
     btnEditarPerfil?.addEventListener('click', () => toggleEditProfile(true));
     btnCancelarPerfil?.addEventListener('click', () => {
-      // Re-carrega os dados originais para descartar mudanças
       loadProfile(); 
     });
 
@@ -933,90 +1309,11 @@
     });
 
     /**********************
-     * DENÚNCIA (POST)    *
+     * PERFIL (AGORA REAL)*
      **********************/
-    const formDen = document.getElementById('form-denuncia');
-    formDen?.addEventListener('submit', async (e)=>{
+    formPerfil?.addEventListener('submit', async (e) => { 
       e.preventDefault();
       
-      // Campos do formulário
-      const tipo = document.getElementById('tipo');
-      const nome = document.getElementById('nome');
-      const chavePix = document.getElementById('chave_pix'); // <-- NOSSO CAMPO
-      const docp = document.getElementById('docparcial'); // <-- NOSSO CAMPO
-      const banco= document.getElementById('banco');     // <-- NOSSO CAMPO
-      const bo = document.getElementById('bo');         // <-- NOSSO CAMPO
-      const boFile = document.getElementById('bo-file');
-      
-      // Campos opcionais (do seu amigo)
-      const agi  = document.getElementById('ag');
-      const cci  = document.getElementById('cc');
-      const val  = document.getElementById('valor');
-      const desc = document.getElementById('desc');
-
-      // Validação manual (do seu amigo)
-      const required = [tipo, nome, chavePix, docp, banco, bo, boFile];
-      let ok = true;
-      required.forEach(el=>{
-        if (!el) return; // Segurança
-        const valid = (el.type==='file') ? (el.files && el.files.length>0) : !!el.value;
-        if(!valid){ 
-          el.classList.add('field-error'); 
-          el.setAttribute('aria-invalid','true'); 
-          el.parentElement.querySelector('.error')?.classList.add('show'); 
-          ok=false; 
-        } else { 
-          el.classList.remove('field-error'); 
-          el.setAttribute('aria-invalid','false'); 
-          el.parentElement.querySelector('.error')?.classList.remove('show'); 
-        }
-      });
-      if(!ok){ showToast('Preencha os campos obrigatórios.', 'error'); return; }
-
-      // Monta o FormData
-      const fd = new FormData();
-      fd.append('anexo', boFile.files[0]);
-      fd.append('tipo_chave_pix', tipo.value);
-      fd.append('nome_conta', nome.value);
-      fd.append('chave_pix', chavePix.value); // <-- NOSSO CAMPO
-      fd.append('numero_bo', bo.value);
-      fd.append('cpf_cnpj', docp.value);
-      fd.append('banco', banco.value);
-
-      // Opcionais
-      if(agi && agi.value) fd.append('agencia', agi.value);
-      if(cci && cci.value) fd.append('conta', cci.value);
-      if(desc && desc.value) fd.append('descricao', desc.value);
-      if(val && val.value) fd.append('valor', val.value); // (Backend vai ignorar, mas tudo bem)
-
-      try{
-        showToast('Enviando denúncia...', 'success');
-        const resp = await fetch(`${API_BASE}/denuncias`, {
-          method: 'POST',
-          headers: authHeaders(), // Frontend dele já faz autenticação!
-          body: fd
-        });
-        const data = await resp.json().catch(()=>({}));
-        if(!resp.ok){ throw new Error(data.detail || 'Erro desconhecido no servidor'); }
-        showToast('Denúncia registrada com sucesso!', 'success');
-        formDen.reset();
-        window.location.hash = '#/pesquisar';
-        await doSearch();
-      }catch(err){
-        console.error('Falha ao enviar denúncia:', err);
-        showToast(`Erro: ${err.message}`, 'error');
-      }
-    });
-
-/**********************
- * PERFIL (AGORA REAL)*
- **********************/
-// A variável 'formPerfil' já foi declarada no topo do script
-
-    formPerfil?.addEventListener('submit', async (e) => { // Adiciona async
-      e.preventDefault();
-      
-      // Validação
       let ok = true;
       if(!profNome.value){ profNome.classList.add('field-error'); profNome.setAttribute('aria-invalid','true'); ok=false; } else { profNome.classList.remove('field-error'); profNome.setAttribute('aria-invalid','false'); }
       if(!profEmail.value || !profEmail.checkValidity()){ profEmail.classList.add('field-error'); profEmail.setAttribute('aria-invalid','true'); ok=false; } else { profEmail.classList.remove('field-error'); profEmail.setAttribute('aria-invalid','false'); }
@@ -1025,101 +1322,93 @@
       
       if(!ok){ showToast('Corrija os campos destacados.', 'error'); return; }
 
-      // Monta o JSON de atualização (schemas.UsuarioUpdate)
       const updateData = {
         nome: profNome.value,
         email: profEmail.value,
         telefone: onlyDigits(profTel.value)
       };
       
-      // Só envia a senha se o usuário digitou uma nova
       if (profPass.value) {
         updateData.senha = profPass.value;
       }
       
       try {
         const resp = await fetch(`${API_BASE}/me`, {
-          method: 'PATCH', // Usa o método PATCH
+          method: 'PATCH', 
           headers: authHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(updateData)
         });
         
+        if(resp.status === 401) { forceLogout(); return; }
+
         const data = await resp.json();
         if (!resp.ok) {
           throw new Error(data.detail || 'Erro ao salvar perfil');
         }
         
         showToast('Perfil atualizado com sucesso!', 'success');
-        toggleEditProfile(false); // Volta para o modo de visualização
+        toggleEditProfile(false); 
         
       } catch (err) {
         console.error(err);
         showToast(`Erro: ${err.message}`, 'error');
-        loadProfile(); // Recarrega os dados em caso de erro
+        loadProfile(); 
       }
     });
 
-    /**************************
-     * INICIALIZAÇÃO E ROTA   *
-     **************************/
-
-    // REMOVEMOS:
-    // const btnVoltarGlobal = ...
-    // function toggleBack() ...
-    // btnVoltarGlobal?.addEventListener('click', ...);
-
-    // FUNÇÃO onRoute ATUALIZADA (Corrige Bugs 1, 3 e 4)
-    function onRoute(){ 
-      const slug = currentSlug();
-      const logged = !!localStorage.getItem('pix-token');
-      
-      const protectedRoutes = ['hub', 'denunciar', 'pesquisar', 'perfil'];
-      const guestRoutes = ['inicio', 'cadastro', 'recuperar'];
-      
-      // --- Lógica de Segurança (Bug 1 e 3) ---
-      if (logged && guestRoutes.includes(slug)) {
-        // Usuário logado tentando ver a página de login? Manda pro Hub.
-        // Isso corrige o Bug 3 (F5)
-        window.location.hash = '#/hub';
-        return; // Para a execução
-      }
-      
-      if (!logged && protectedRoutes.includes(slug)) {
-        // Usuário deslogado tentando ver página protegida? Manda pro Login.
-        // Isso corrige o Bug 1 (Auth Bypass)
-        window.location.hash = '#/inicio';
-        return; // Para a execução
-      }
-      
-      // Se chegamos aqui, o usuário PODE ver esta página.
-      setActive(slug); 
-      
-      // --- Lógica de Carregamento de Dados (Bug 4) ---
-      // Movemos o carregamento de dados para DENTRO do onRoute,
-      // assim ele roda na navegação E no F5 (mas só se o usuário tiver acesso).
-      
-      if (slug === 'perfil') {
-        loadProfile();
-      }
-      if (slug === 'pesquisar') {
-        // Isso corrige o Bug 4 (tabela não carregava)
-        doSearch(); 
-      }
-    }
-    
-    // DOMContentLoaded ATUALIZADO (Mais limpo)
     window.addEventListener('DOMContentLoaded', ()=>{
-      // Restaura o filtro ANTES de fazer a primeira busca
       const savedFiltro = localStorage.getItem('filtro-tipo') || '';
       const filtroTipoEl = document.getElementById('filtro-tipo');
       if(filtroTipoEl){ filtroTipoEl.value = savedFiltro; }
       
-      // O onRoute agora cuida de TUDO:
-      // 1. Verifica login
-      // 2. Redireciona se necessário
-      // 3. Mostra a página certa
-      // 4. Carrega os dados da página (doSearch, loadProfile)
       onRoute();
+    });
+
+    // 6. Resetar Senha (Final)
+    document.getElementById('form-resetar')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const p1 = document.getElementById('reset-pass');
+      const p2 = document.getElementById('reset-confirm');
+      
+      // Validação simples
+      if(p1.value.length < 6) {
+          showToast('A senha deve ter no mínimo 6 caracteres.', 'error');
+          return;
+      }
+      if(p1.value !== p2.value) {
+          showToast('As senhas não conferem.', 'error');
+          return;
+      }
+
+      // Pega o token da URL (ex: ...#/resetar?token=XYZ...)
+      const params = new URLSearchParams(window.location.hash.split('?')[1]);
+      const token = params.get('token');
+
+      if(!token) {
+          showToast('Link inválido ou sem token.', 'error');
+          return;
+      }
+
+      try {
+        const resp = await fetch(`${API_BASE}/reset-password`, {
+           method: 'POST', 
+           headers: {'Content-Type':'application/json'},
+           body: JSON.stringify({ token: token, new_password: p1.value })
+        });
+        
+        const data = await resp.json();
+        
+        if(!resp.ok) throw new Error(data.detail || 'Erro ao alterar senha');
+        
+        showToast('Senha alterada com sucesso!', 'success');
+        
+        // Redireciona para o login
+        setTimeout(() => window.location.hash = '#/inicio', 2000);
+
+      } catch(err) { 
+        console.error(err);
+        showToast(err.message, 'error'); 
+      }
     });
   </script>
 </body>
